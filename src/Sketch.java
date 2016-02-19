@@ -52,7 +52,7 @@ public class Sketch extends PApplet {
 		float i = 0;
 		for (Country country : countries) {
 			if (!country.isMouseOver()) {
-				country.displayDetailRadial(i, selectedCountry.getFlag_position());
+				country.displayDetailRadial(i, selectedCountry.getFlag_position(), selectedCountry.getFLAG_SIZE());
 				i++;
 			}
 		}

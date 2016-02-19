@@ -4,6 +4,7 @@ import processing.core.PVector;
 
 public class Country {
 
+	private static final float SPEED = 0.03f;
 	private PApplet parent;
 	private float FLAG_SIZE;
 	private String name;
@@ -14,8 +15,7 @@ public class Country {
 	float TARGET_FLAG_SIZE_CENTER;
 	float TARGET_FLAG_SIZE_RADIAL;
 
-	public Country(PApplet parent, float FLAG_SIZE, String name, PVector flag_position, PImage flag_img,
-			PImage hover_img, boolean mouseOver) {
+	public Country(PApplet parent, float FLAG_SIZE, String name, PVector flag_position, PImage flag_img, PImage hover_img, boolean mouseOver) {
 		this.parent = parent;
 		this.FLAG_SIZE = FLAG_SIZE;
 		this.name = name;
@@ -86,32 +86,30 @@ public class Country {
 
 	public void display() {
 		if (mouseOver) {
-			parent.image(hover_img, flag_position.x - FLAG_SIZE / 2, flag_position.y - FLAG_SIZE / 2, FLAG_SIZE,
-					FLAG_SIZE);
+			parent.image(hover_img, flag_position.x - FLAG_SIZE / 2, flag_position.y - FLAG_SIZE / 2, FLAG_SIZE, FLAG_SIZE);
 		} else {
-			parent.image(flag_img, flag_position.x - FLAG_SIZE / 2, flag_position.y - FLAG_SIZE / 2, FLAG_SIZE,
-					FLAG_SIZE);
+			parent.image(flag_img, flag_position.x - FLAG_SIZE / 2, flag_position.y - FLAG_SIZE / 2, FLAG_SIZE, FLAG_SIZE);
 		}
 	}
 
 	public void displayDetailCenter() {
 		float ds = TARGET_FLAG_SIZE_CENTER - FLAG_SIZE;
-		FLAG_SIZE += ds * 0.05;
+		FLAG_SIZE += ds * SPEED;
 
 		float targetX = parent.width / 2 - TARGET_FLAG_SIZE_CENTER / 2;
 		float dx = targetX - flag_position.x;
-		flag_position.x += dx * 0.05;
+		flag_position.x += dx * SPEED;
 
 		float targetY = parent.height / 2 - TARGET_FLAG_SIZE_CENTER / 2;
 		float dy = targetY - flag_position.y;
-		flag_position.y += dy * 0.05;
+		flag_position.y += dy * SPEED;
 
 		parent.image(flag_img, flag_position.x, flag_position.y, FLAG_SIZE, FLAG_SIZE);
 	}
 
-	public void displayDetailRadial(float i, PVector centerFlagPosition) {
+	public void displayDetailRadial(float i, PVector centerFlagPosition, float centerFlagSize) {
 		float ds = TARGET_FLAG_SIZE_RADIAL - FLAG_SIZE;
-		FLAG_SIZE += ds * 0.05;
+		FLAG_SIZE += ds * SPEED;
 
 		float cx = parent.width / 2;
 		float cy = parent.height / 2;
@@ -119,15 +117,14 @@ public class Country {
 
 		float targetX = cx + r * PApplet.cos(PApplet.radians((float) (i * (360f / 23f))));
 		float dx = targetX - flag_position.x;
-		flag_position.x += dx * 0.05;
+		flag_position.x += dx * SPEED;
 
 		float targetY = cy + r * PApplet.sin(PApplet.radians((float) (i * (360f / 23f))));
 		float dy = targetY - flag_position.y;
-		flag_position.y += dy * 0.05;
+		flag_position.y += dy * SPEED;
 
 		parent.stroke(255, 0, 0);
-		parent.line(centerFlagPosition.x + TARGET_FLAG_SIZE_CENTER / 2,
-				centerFlagPosition.y + TARGET_FLAG_SIZE_CENTER / 2, flag_position.x, flag_position.y);
+		parent.line(centerFlagPosition.x + centerFlagSize / 2, centerFlagPosition.y + centerFlagSize / 2, flag_position.x, flag_position.y);
 		parent.image(flag_img, flag_position.x - FLAG_SIZE, flag_position.y - FLAG_SIZE, FLAG_SIZE * 2, FLAG_SIZE * 2);
 
 	}
