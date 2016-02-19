@@ -7,9 +7,15 @@ import processing.core.PVector;
 
 public class Sketch extends PApplet {
 
+<<<<<<< Updated upstream
 	PImage map;
 	MercatorMap mercatorMap;
+=======
+	PImage map, de, en;
+>>>>>>> Stashed changes
 	float FLAG_SIZE;
+	PVector pos_de;
+	boolean countryOver = false;
 
 	List<Country> countries;
 
@@ -20,9 +26,17 @@ public class Sketch extends PApplet {
 		map = loadImage("res/img/map.png");
 		image(map, 0, 0, width, height);
 
+<<<<<<< Updated upstream
 		mercatorMap = new MercatorMap(width, height, 67.25f, 33.1376f, -30.7617f, 59.9414f);
 		createCountries();
 		drawFlags();
+=======
+		de = loadImage("res/img/nationalflaggen/germany.png");
+		en = loadImage("res/img/nationalflaggen/england.png");
+		MercatorMap mercatorMap = new MercatorMap(width, height, 67.2720f, 33.1376f, -30.7617f, 59.9414f);
+		pos_de = mercatorMap.getScreenLocation(new PVector(50.87065f, 10.559104f));
+		image(de, pos_de.x - FLAG_SIZE / 2, pos_de.y - FLAG_SIZE / 2, FLAG_SIZE, FLAG_SIZE);
+>>>>>>> Stashed changes
 	}
 
 	public void settings() {
@@ -30,7 +44,44 @@ public class Sketch extends PApplet {
 	}
 
 	public void draw() {
+		update(mouseX, mouseY);
 
+		if (countryOver) {
+			PImage hover = de.copy();
+			hover.filter(POSTERIZE, 2);
+			image(hover, pos_de.x - FLAG_SIZE / 2, pos_de.y - FLAG_SIZE / 2, FLAG_SIZE, FLAG_SIZE);
+		} else {
+			image(de, pos_de.x - FLAG_SIZE / 2, pos_de.y - FLAG_SIZE / 2, FLAG_SIZE, FLAG_SIZE);
+		}
+
+	}
+
+	public void mouseClicked() {
+
+		if (countryOver) {
+			println("TRUE");
+		} else {
+			println("FALSE");
+		}
+
+	}
+
+	void update(int x, int y) {
+		if (overCountry(pos_de.x, pos_de.y, FLAG_SIZE)) {
+			countryOver = true;
+		} else {
+			countryOver = false;
+		}
+	}
+
+	boolean overCountry(float x, float y, float diameter) {
+		float disX = x - mouseX;
+		float disY = y - mouseY;
+		if (sqrt(sq(disX) + sq(disY)) < diameter / 2) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	private void createCountries() {
