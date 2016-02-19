@@ -7,22 +7,28 @@ import processing.core.PVector;
 
 public class Sketch extends PApplet {
 
+	PImage logo;
+	PImage map;
 	MercatorMap mercatorMap;
 	float FLAG_SIZE;
 
 	List<Country> countries;
 	Country selectedCountry;
 
+	boolean detailView;
+
 	public void setup() {
 		FLAG_SIZE = height / 30f;
-		println("Window-Width: " + width + " // Window-Height: " + height + " // FLAG_SIZE: " + FLAG_SIZE);
 
-		PImage map = loadImage("res/img/map.png");
+		map = loadImage("res/img/map.png");
 		image(map, 0, 0, width, height);
 		mercatorMap = new MercatorMap(width, height, 67.25f, 33.1376f, -30.7617f, 59.9414f);
 
-		PImage logo = loadImage("res/img/em2016_logo.png");
+		logo = loadImage("res/img/em2016_logo.png");
 		image(logo, 10, height - 160, 110, 146);
+
+		detailView = false;
+		selectedCountry = null;
 
 		createCountries();
 	}
@@ -32,14 +38,35 @@ public class Sketch extends PApplet {
 	}
 
 	public void draw() {
-		updateCountries(mouseX, mouseY);
+		if (detailView) {
+			updateDetailView();
+		} else {
+			updateCountries(mouseX, mouseY);
+		}
+	}
 
+	private void updateDetailView() {
+		background(200);
+		image(logo, 10, height - 160, 110, 146);
+
+		float i = 0;
+		for (Country country : countries) {
+			if (!country.isMouseOver()) {
+				country.displayDetailRadial(i, selectedCountry.getFlag_position());
+				i++;
+			}
+		}
+
+		selectedCountry.displayDetailCenter();
 	}
 
 	public void mouseClicked() {
-		if (selectedCountry != null) {
-			println(selectedCountry.getName());
-			background(255);
+		if (mouseButton == LEFT) {
+			if (selectedCountry != null) {
+				detailView = true;
+			}
+		} else {
+			setup();
 		}
 	}
 

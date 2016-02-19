@@ -11,7 +11,11 @@ public class Country {
 	private PImage flag_img, hover_img;
 	private boolean mouseOver;
 
-	public Country(PApplet parent, float FLAG_SIZE, String name, PVector flag_position, PImage flag_img, PImage hover_img, boolean mouseOver) {
+	float TARGET_FLAG_SIZE_CENTER;
+	float TARGET_FLAG_SIZE_RADIAL;
+
+	public Country(PApplet parent, float FLAG_SIZE, String name, PVector flag_position, PImage flag_img,
+			PImage hover_img, boolean mouseOver) {
 		this.parent = parent;
 		this.FLAG_SIZE = FLAG_SIZE;
 		this.name = name;
@@ -19,6 +23,9 @@ public class Country {
 		this.flag_img = flag_img;
 		this.hover_img = hover_img;
 		this.mouseOver = mouseOver;
+
+		TARGET_FLAG_SIZE_CENTER = FLAG_SIZE * 6f;
+		TARGET_FLAG_SIZE_RADIAL = FLAG_SIZE * 1.5f;
 	}
 
 	public PApplet getParent() {
@@ -79,9 +86,49 @@ public class Country {
 
 	public void display() {
 		if (mouseOver) {
-			parent.image(hover_img, flag_position.x - FLAG_SIZE / 2, flag_position.y - FLAG_SIZE / 2, FLAG_SIZE, FLAG_SIZE);
+			parent.image(hover_img, flag_position.x - FLAG_SIZE / 2, flag_position.y - FLAG_SIZE / 2, FLAG_SIZE,
+					FLAG_SIZE);
 		} else {
-			parent.image(flag_img, flag_position.x - FLAG_SIZE / 2, flag_position.y - FLAG_SIZE / 2, FLAG_SIZE, FLAG_SIZE);
+			parent.image(flag_img, flag_position.x - FLAG_SIZE / 2, flag_position.y - FLAG_SIZE / 2, FLAG_SIZE,
+					FLAG_SIZE);
 		}
+	}
+
+	public void displayDetailCenter() {
+		float ds = TARGET_FLAG_SIZE_CENTER - FLAG_SIZE;
+		FLAG_SIZE += ds * 0.05;
+
+		float targetX = parent.width / 2 - TARGET_FLAG_SIZE_CENTER / 2;
+		float dx = targetX - flag_position.x;
+		flag_position.x += dx * 0.05;
+
+		float targetY = parent.height / 2 - TARGET_FLAG_SIZE_CENTER / 2;
+		float dy = targetY - flag_position.y;
+		flag_position.y += dy * 0.05;
+
+		parent.image(flag_img, flag_position.x, flag_position.y, FLAG_SIZE, FLAG_SIZE);
+	}
+
+	public void displayDetailRadial(float i, PVector centerFlagPosition) {
+		float ds = TARGET_FLAG_SIZE_RADIAL - FLAG_SIZE;
+		FLAG_SIZE += ds * 0.05;
+
+		float cx = parent.width / 2;
+		float cy = parent.height / 2;
+		float r = parent.height / 2.5f;
+
+		float targetX = cx + r * PApplet.cos(PApplet.radians((float) (i * (360f / 23f))));
+		float dx = targetX - flag_position.x;
+		flag_position.x += dx * 0.05;
+
+		float targetY = cy + r * PApplet.sin(PApplet.radians((float) (i * (360f / 23f))));
+		float dy = targetY - flag_position.y;
+		flag_position.y += dy * 0.05;
+
+		parent.stroke(255, 0, 0);
+		parent.line(centerFlagPosition.x + TARGET_FLAG_SIZE_CENTER / 2,
+				centerFlagPosition.y + TARGET_FLAG_SIZE_CENTER / 2, flag_position.x, flag_position.y);
+		parent.image(flag_img, flag_position.x - FLAG_SIZE, flag_position.y - FLAG_SIZE, FLAG_SIZE * 2, FLAG_SIZE * 2);
+
 	}
 }
