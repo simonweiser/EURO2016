@@ -7,7 +7,6 @@ import processing.core.PVector;
 
 public class Sketch extends PApplet {
 
-	PImage map;
 	MercatorMap mercatorMap;
 	float FLAG_SIZE;
 
@@ -18,12 +17,14 @@ public class Sketch extends PApplet {
 		FLAG_SIZE = height / 30f;
 		println("Window-Width: " + width + " // Window-Height: " + height + " // FLAG_SIZE: " + FLAG_SIZE);
 
-		map = loadImage("res/img/map.png");
+		PImage map = loadImage("res/img/map.png");
 		image(map, 0, 0, width, height);
 		mercatorMap = new MercatorMap(width, height, 67.25f, 33.1376f, -30.7617f, 59.9414f);
-		
-		createCountries();
 
+		PImage logo = loadImage("res/img/em2016_logo.png");
+		image(logo, 10, height - 160, 110, 146);
+
+		createCountries();
 	}
 
 	public void settings() {
@@ -36,21 +37,23 @@ public class Sketch extends PApplet {
 	}
 
 	public void mouseClicked() {
-		println(selectedCountry.getName());
-
+		if (selectedCountry != null) {
+			println(selectedCountry.getName());
+		}
 	}
 
 	private void updateCountries(int x, int y) {
-
 		for (Country country : countries) {
 			if (overCountry(country.getFlag_position().x, country.getFlag_position().y, FLAG_SIZE)) {
 				country.setMouseOver(true);
 				selectedCountry = country;
+				country.display();
+				break;
 			} else {
 				country.setMouseOver(false);
+				selectedCountry = null;
+				country.display();
 			}
-			
-			country.display();
 		}
 
 	}
@@ -92,7 +95,6 @@ public class Sketch extends PApplet {
 		createCountryAndAddtoList("Turkey", 38.963745f, 35.243322f);
 		createCountryAndAddtoList("Ukraine", 49.789843f, 31.195906f);
 		createCountryAndAddtoList("Wales", 52.144527f, -3.981143f);
-
 	}
 
 	private void createCountryAndAddtoList(String name, float flag_position_x, float flag_position_y) {
