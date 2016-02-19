@@ -39,21 +39,27 @@ public class Sketch extends PApplet {
 	public void mouseClicked() {
 		if (selectedCountry != null) {
 			println(selectedCountry.getName());
+			background(255);
 		}
 	}
 
 	private void updateCountries(int x, int y) {
+
+		boolean isMouseOverCountry = false;
+
 		for (Country country : countries) {
 			if (overCountry(country.getFlag_position().x, country.getFlag_position().y, FLAG_SIZE)) {
 				country.setMouseOver(true);
 				selectedCountry = country;
-				country.display();
-				break;
+				isMouseOverCountry = true;
 			} else {
 				country.setMouseOver(false);
-				selectedCountry = null;
-				country.display();
 			}
+			country.display();
+		}
+
+		if (isMouseOverCountry == false) {
+			selectedCountry = null;
 		}
 
 	}
