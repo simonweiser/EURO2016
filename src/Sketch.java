@@ -12,9 +12,9 @@ public class Sketch extends PApplet {
 		println("Window-Width: " + width + " // Window-Height: " + height + " // FLAG_SIZE: " + FLAG_SIZE);
 
 		map = loadImage("res/img/map.png");
+		image(map, 0, 0, width, height);
+		
 		de = loadImage("res/img/nationalflaggen/germany.png");
-
-		image(map, 0, 0);
 
 		MercatorMap mercatorMap = new MercatorMap(width, height, 67.2720f, 33.1376f, -30.7617f, 59.9414f);
 		PVector pos_de = mercatorMap.getScreenLocation(new PVector(50.87065f, 10.559104f));
