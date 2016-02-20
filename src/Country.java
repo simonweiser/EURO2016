@@ -2,6 +2,7 @@ import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
 import processing.data.Table;
+import processing.data.TableRow;
 
 public class Country {
 
@@ -13,6 +14,7 @@ public class Country {
 	private PImage flag_img, hover_img;
 	private boolean mouseOver;
 
+	// opponent, played, won, draw, lost, goals_for, goals_aggainst
 	private Table h2hData;
 
 	float TARGET_FLAG_SIZE_CENTER;
@@ -122,13 +124,40 @@ public class Country {
 		parent.image(flag_img, flag_position.x, flag_position.y, FLAG_SIZE, FLAG_SIZE);
 	}
 
-	public void displayDetailRadial(float i, PVector centerFlagPosition, float centerFlagSize) {
-		float ds = TARGET_FLAG_SIZE_RADIAL - FLAG_SIZE;
-		FLAG_SIZE += ds * SPEED;
+	public void displayDetailRadial(float i, Country selectedCountry) {
+		PVector centerFlagPosition = selectedCountry.getFlag_position();
+		float centerFlagSize = selectedCountry.getFLAG_SIZE();
 
 		float cx = parent.width / 2;
 		float cy = parent.height / 2;
 		float r = parent.height / 2.5f;
+
+		float red = 0f;
+		float green = 0f;
+		float blue = 0f;
+
+		for (TableRow row : h2hData.rows()) {
+			String opponentName = row.getString("opponent");
+			if (selectedCountry.getName().equals(opponentName)) {
+				int played = row.getInt("played");
+				int won = row.getInt("lost");
+				int draw = row.getInt("draw");
+				int lost = row.getInt("won");
+				int goalsAggainst = row.getInt("goals_for");
+				int goalsFor = row.getInt("goals_aggainst");
+
+				if (won > lost) {
+					green = 255f;
+				} else {
+					red = 255f;
+				}
+
+				break;
+			}
+		}
+
+		float ds = TARGET_FLAG_SIZE_RADIAL - FLAG_SIZE;
+		FLAG_SIZE += ds * SPEED;
 
 		float targetX = cx + r * PApplet.cos(PApplet.radians((float) (i * (360f / 23f))));
 		float dx = targetX - flag_position.x;
@@ -138,10 +167,11 @@ public class Country {
 		float dy = targetY - flag_position.y;
 		flag_position.y += dy * SPEED;
 
-		parent.stroke(255, 0, 0);
+		parent.stroke(red, green, blue);
 		parent.line(centerFlagPosition.x + centerFlagSize / 2, centerFlagPosition.y + centerFlagSize / 2,
 				flag_position.x, flag_position.y);
 		parent.image(flag_img, flag_position.x - FLAG_SIZE, flag_position.y - FLAG_SIZE, FLAG_SIZE * 2, FLAG_SIZE * 2);
 
 	}
+
 }
