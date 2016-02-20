@@ -5,7 +5,6 @@ import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
 import processing.data.Table;
-import processing.data.TableRow;
 
 public class Sketch extends PApplet {
 
@@ -16,8 +15,9 @@ public class Sketch extends PApplet {
 
 	List<Country> countries;
 	Country selectedCountry;
+	Country selectedCountryDetail;
 
-	boolean detailView;
+	int drawSceneNum;
 
 	public void setup() {
 		FLAG_SIZE = height / 30f;
@@ -29,8 +29,9 @@ public class Sketch extends PApplet {
 		logo = loadImage("res/img/em2016_logo.png");
 		image(logo, 10, height - 160, 110, 146);
 
-		detailView = false;
+		drawSceneNum = 1;
 		selectedCountry = null;
+		selectedCountryDetail = null;
 
 		createCountries();
 	}
@@ -40,29 +41,25 @@ public class Sketch extends PApplet {
 	}
 
 	public void draw() {
-		if (detailView) {
-			updateDetailView();
-		} else {
-			updateCountries(mouseX, mouseY);
-		}
-	}
+		switch (drawSceneNum) {
+		case 1:
+			updateScene1(mouseX, mouseY);
+			break;
 
-	private void updateDetailView() {
-		background(200);
-		image(logo, 10, height - 160, 110, 146);
+		case 2:
+			updateScene2(mouseX, mouseY);
+			break;
 
-		float i = 0;
+		case 3:
+			updateScene3(mouseX, mouseY);
+			break;
 
-		sortCountriesByPlayed();
-
-		for (Country country : countries) {
-			if (!country.isMouseOver()) {
-				country.displayDetailRadial(i, selectedCountry);
-				i++;
-			}
+		default:
+			println("ERROR: DRAW");
+			updateScene1(mouseX, mouseY);
+			break;
 		}
 
-		selectedCountry.displayDetailCenter();
 	}
 
 	private void sortCountriesByPlayed() {
@@ -84,14 +81,32 @@ public class Sketch extends PApplet {
 	public void mouseClicked() {
 		if (mouseButton == LEFT) {
 			if (selectedCountry != null) {
-				detailView = true;
+				drawSceneNum = 2;
+			}
+			if (selectedCountry != null && selectedCountryDetail != null) {
+				drawSceneNum = 3;
 			}
 		} else {
-			setup();
+			switch (drawSceneNum) {
+			case 1:
+				break;
+
+			case 2:
+				setup();
+				break;
+
+			case 3:
+				drawSceneNum--;
+				break;
+
+			default:
+				println("ERROR: MOUSECLICKED");
+				break;
+			}
 		}
 	}
 
-	private void updateCountries(int x, int y) {
+	private void updateScene1(int x, int y) {
 
 		boolean isMouseOverCountry = false;
 
@@ -110,6 +125,46 @@ public class Sketch extends PApplet {
 			selectedCountry = null;
 		}
 
+	}
+
+	private void updateScene2(int mouseX, int mouseY) {
+		background(200);
+		image(logo, 10, height - 160, 110, 146);
+
+		float i = 0;
+
+		sortCountriesByPlayed();
+
+		boolean isMouseOverCountry = false;
+
+		for (Country country : countries) {
+			if (!country.isMouseOver()) {
+				if (overCountry(country.getFlag_position().x, country.getFlag_position().y, FLAG_SIZE * 2)) {
+					country.setMouseOverDetail(true);
+					selectedCountryDetail = country;
+					isMouseOverCountry = true;
+				} else {
+					country.setMouseOverDetail(false);
+				}
+
+				country.displayDetailRadial(i, selectedCountry);
+				i++;
+			}
+		}
+
+		if (isMouseOverCountry == false) {
+			selectedCountryDetail = null;
+		}
+
+		selectedCountry.displayDetailCenter();
+	}
+
+	private void updateScene3(int mouseX, int mouseY) {
+		background(200);
+		image(logo, 10, height - 160, 110, 146);
+
+		selectedCountryDetail.displayDetailRadial(13, selectedCountry);
+		selectedCountry.displayDetailCenter();
 	}
 
 	private boolean overCountry(float x, float y, float diameter) {

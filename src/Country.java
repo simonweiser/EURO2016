@@ -13,6 +13,7 @@ public class Country {
 	private PVector flag_position;
 	private PImage flag_img, hover_img;
 	private boolean mouseOver;
+	private boolean mouseOverDetail;
 
 	// opponent, played, won, draw, lost, goals_for, goals_aggainst
 	private Table h2hData;
@@ -30,6 +31,8 @@ public class Country {
 		this.hover_img = hover_img;
 		this.mouseOver = mouseOver;
 		this.h2hData = h2hData;
+
+		this.setMouseOverDetail(false);
 
 		TARGET_FLAG_SIZE_CENTER = FLAG_SIZE * 6f;
 		TARGET_FLAG_SIZE_RADIAL = FLAG_SIZE;
@@ -97,6 +100,14 @@ public class Country {
 
 	public void setH2hData(Table h2hData) {
 		this.h2hData = h2hData;
+	}
+
+	public boolean isMouseOverDetail() {
+		return mouseOverDetail;
+	}
+
+	public void setMouseOverDetail(boolean mouseOverDetail) {
+		this.mouseOverDetail = mouseOverDetail;
 	}
 
 	public void display() {
@@ -201,7 +212,13 @@ public class Country {
 		flag_position.y += dy * SPEED;
 
 		// DRAW RADIAL FLAG
-		parent.image(flag_img, flag_position.x - FLAG_SIZE, flag_position.y - FLAG_SIZE, FLAG_SIZE * 2, FLAG_SIZE * 2);
+		if (mouseOverDetail) {
+			parent.image(hover_img, flag_position.x - FLAG_SIZE, flag_position.y - FLAG_SIZE, FLAG_SIZE * 2,
+					FLAG_SIZE * 2);
+		} else {
+			parent.image(flag_img, flag_position.x - FLAG_SIZE, flag_position.y - FLAG_SIZE, FLAG_SIZE * 2,
+					FLAG_SIZE * 2);
+		}
 
 	}
 
