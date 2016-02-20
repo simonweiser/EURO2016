@@ -1,6 +1,7 @@
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
+import processing.data.Table;
 
 public class Country {
 
@@ -12,10 +13,13 @@ public class Country {
 	private PImage flag_img, hover_img;
 	private boolean mouseOver;
 
+	private Table h2hData;
+
 	float TARGET_FLAG_SIZE_CENTER;
 	float TARGET_FLAG_SIZE_RADIAL;
 
-	public Country(PApplet parent, float FLAG_SIZE, String name, PVector flag_position, PImage flag_img, PImage hover_img, boolean mouseOver) {
+	public Country(PApplet parent, float FLAG_SIZE, String name, PVector flag_position, PImage flag_img,
+			PImage hover_img, boolean mouseOver, Table h2hData) {
 		this.parent = parent;
 		this.FLAG_SIZE = FLAG_SIZE;
 		this.name = name;
@@ -23,6 +27,7 @@ public class Country {
 		this.flag_img = flag_img;
 		this.hover_img = hover_img;
 		this.mouseOver = mouseOver;
+		this.h2hData = h2hData;
 
 		TARGET_FLAG_SIZE_CENTER = FLAG_SIZE * 6f;
 		TARGET_FLAG_SIZE_RADIAL = FLAG_SIZE * 1.5f;
@@ -84,11 +89,21 @@ public class Country {
 		this.mouseOver = mouseOver;
 	}
 
+	public Table getH2hData() {
+		return h2hData;
+	}
+
+	public void setH2hData(Table h2hData) {
+		this.h2hData = h2hData;
+	}
+
 	public void display() {
 		if (mouseOver) {
-			parent.image(hover_img, flag_position.x - FLAG_SIZE / 2, flag_position.y - FLAG_SIZE / 2, FLAG_SIZE, FLAG_SIZE);
+			parent.image(hover_img, flag_position.x - FLAG_SIZE / 2, flag_position.y - FLAG_SIZE / 2, FLAG_SIZE,
+					FLAG_SIZE);
 		} else {
-			parent.image(flag_img, flag_position.x - FLAG_SIZE / 2, flag_position.y - FLAG_SIZE / 2, FLAG_SIZE, FLAG_SIZE);
+			parent.image(flag_img, flag_position.x - FLAG_SIZE / 2, flag_position.y - FLAG_SIZE / 2, FLAG_SIZE,
+					FLAG_SIZE);
 		}
 	}
 
@@ -124,7 +139,8 @@ public class Country {
 		flag_position.y += dy * SPEED;
 
 		parent.stroke(255, 0, 0);
-		parent.line(centerFlagPosition.x + centerFlagSize / 2, centerFlagPosition.y + centerFlagSize / 2, flag_position.x, flag_position.y);
+		parent.line(centerFlagPosition.x + centerFlagSize / 2, centerFlagPosition.y + centerFlagSize / 2,
+				flag_position.x, flag_position.y);
 		parent.image(flag_img, flag_position.x - FLAG_SIZE, flag_position.y - FLAG_SIZE, FLAG_SIZE * 2, FLAG_SIZE * 2);
 
 	}

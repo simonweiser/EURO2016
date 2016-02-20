@@ -4,6 +4,8 @@ import java.util.List;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
+import processing.data.Table;
+import processing.data.TableRow;
 
 public class Sketch extends PApplet {
 
@@ -135,8 +137,25 @@ public class Sketch extends PApplet {
 		PImage flag_img = loadImage("res/img/nationalflaggen/" + name.toLowerCase() + ".png");
 		PImage hover_img = loadImage("res/img/nationalflaggen/" + name.toLowerCase() + ".png");
 		hover_img.filter(POSTERIZE, 2);
-		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, false);
+
+		// opponent, played, won, draw, lost, goals_for, goals_aggainst
+		Table h2hData = loadTable("res/data/h2h_alltime/h2h_" + name.toLowerCase() + "_alltime.csv", "header");
+		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, false, h2hData);
 		countries.add(country);
+
+		for (TableRow row : h2hData.rows()) {
+
+			String opponent = row.getString("opponent");
+			int played = row.getInt("played");
+			int won = row.getInt("won");
+			int draw = row.getInt("draw");
+			int lost = row.getInt("lost");
+			int goalsFor = row.getInt("goals_for");
+			int goalsAggainst = row.getInt("goals_aggainst");
+
+			println(name + " --> opponent: " + opponent + " // played: " + played + " // won: " + won + " // draw: "
+					+ draw + " // lost: " + lost + " // goalsFor: " + goalsFor + " // goalsAggainst: " + goalsAggainst);
+		}
 	}
 
 	public static void main(String args[]) {
