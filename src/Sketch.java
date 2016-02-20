@@ -1,5 +1,6 @@
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.Comparator;
 
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -13,9 +14,8 @@ public class Sketch extends PApplet {
 	MercatorMap mercatorMap;
 	float FLAG_SIZE;
 
-	List<Country> countries;
-	Country selectedCountry;
-	Country selectedCountryDetail;
+	ArrayList<Country> countries, countrySorted;
+	Country selectedCountry, selectedCountryDetail;
 
 	int drawSceneNum;
 
@@ -34,6 +34,7 @@ public class Sketch extends PApplet {
 		selectedCountryDetail = null;
 
 		createCountries();
+
 	}
 
 	public void settings() {
@@ -62,25 +63,30 @@ public class Sketch extends PApplet {
 
 	}
 
-	private void sortCountriesByPlayed() {
+	private ArrayList<Country> sortCountriesByPlayed() {
 		ArrayList<Country> countriesCopy = new ArrayList<Country>();
 		countriesCopy.addAll(countries);
+		countriesCopy.remove(selectedCountry);
 
-		ArrayList<Country> countriesSortedByPlayed = new ArrayList<Country>();
+		Collections.sort(countriesCopy, new Comparator<Country>() {
 
-		// for (TableRow selectedCountryRow :
-		// selectedCountry.getH2hData().rows()) {
-		// int currentPlayed = selectedCountryRow.getInt("played");
-		// if (currentPlayed > maxPlayed) {
-		// maxPlayed = currentPlayed;
-		// }
-		// }
+			@Override
+			public int compare(Country c1, Country c2) {
+				int rowIndex1 = c1.getH2hData().findRowIndex(selectedCountry.getName(), "opponent");
+				int rowIndex2 = c2.getH2hData().findRowIndex(selectedCountry.getName(), "opponent");
+				return c1.getH2hData().getInt(rowIndex1, "played") - c2.getH2hData().getInt(rowIndex2, "played");
+			}
+
+		});
+
+		return countriesCopy;
 
 	}
 
 	public void mouseClicked() {
 		if (mouseButton == LEFT) {
 			if (selectedCountry != null) {
+				countrySorted = sortCountriesByPlayed();
 				drawSceneNum = 2;
 			}
 			if (selectedCountry != null && selectedCountryDetail != null) {
@@ -132,12 +138,10 @@ public class Sketch extends PApplet {
 		image(logo, 10, height - 160, 110, 146);
 
 		float i = 0;
-
-		sortCountriesByPlayed();
-
 		boolean isMouseOverCountry = false;
 
-		for (Country country : countries) {
+		for (Country country : countrySorted) {
+
 			if (!country.isMouseOver()) {
 				if (overCountry(country.getFlag_position().x, country.getFlag_position().y, FLAG_SIZE * 2)) {
 					country.setMouseOverDetail(true);

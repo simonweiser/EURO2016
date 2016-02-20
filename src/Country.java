@@ -21,8 +21,7 @@ public class Country {
 	float TARGET_FLAG_SIZE_CENTER;
 	float TARGET_FLAG_SIZE_RADIAL;
 
-	public Country(PApplet parent, float FLAG_SIZE, String name, PVector flag_position, PImage flag_img,
-			PImage hover_img, boolean mouseOver, Table h2hData) {
+	public Country(PApplet parent, float FLAG_SIZE, String name, PVector flag_position, PImage flag_img, PImage hover_img, boolean mouseOver, Table h2hData) {
 		this.parent = parent;
 		this.FLAG_SIZE = FLAG_SIZE;
 		this.name = name;
@@ -112,11 +111,9 @@ public class Country {
 
 	public void display() {
 		if (mouseOver) {
-			parent.image(hover_img, flag_position.x - FLAG_SIZE / 2, flag_position.y - FLAG_SIZE / 2, FLAG_SIZE,
-					FLAG_SIZE);
+			parent.image(hover_img, flag_position.x - FLAG_SIZE / 2, flag_position.y - FLAG_SIZE / 2, FLAG_SIZE, FLAG_SIZE);
 		} else {
-			parent.image(flag_img, flag_position.x - FLAG_SIZE / 2, flag_position.y - FLAG_SIZE / 2, FLAG_SIZE,
-					FLAG_SIZE);
+			parent.image(flag_img, flag_position.x - FLAG_SIZE / 2, flag_position.y - FLAG_SIZE / 2, FLAG_SIZE, FLAG_SIZE);
 		}
 	}
 
@@ -190,8 +187,7 @@ public class Country {
 		// DRAW LINE
 		if (played != 0) {
 			parent.stroke(red, green, blue);
-			parent.line(centerFlagPosition.x + centerFlagSize / 2, centerFlagPosition.y + centerFlagSize / 2,
-					flag_position.x, flag_position.y);
+			parent.line(centerFlagPosition.x + centerFlagSize / 2, centerFlagPosition.y + centerFlagSize / 2, flag_position.x, flag_position.y);
 		}
 
 		// RADIUS
@@ -213,11 +209,9 @@ public class Country {
 
 		// DRAW RADIAL FLAG
 		if (mouseOverDetail) {
-			parent.image(hover_img, flag_position.x - FLAG_SIZE, flag_position.y - FLAG_SIZE, FLAG_SIZE * 2,
-					FLAG_SIZE * 2);
+			parent.image(hover_img, flag_position.x - FLAG_SIZE, flag_position.y - FLAG_SIZE, FLAG_SIZE * 2, FLAG_SIZE * 2);
 		} else {
-			parent.image(flag_img, flag_position.x - FLAG_SIZE, flag_position.y - FLAG_SIZE, FLAG_SIZE * 2,
-					FLAG_SIZE * 2);
+			parent.image(flag_img, flag_position.x - FLAG_SIZE, flag_position.y - FLAG_SIZE, FLAG_SIZE * 2, FLAG_SIZE * 2);
 		}
 
 	}
