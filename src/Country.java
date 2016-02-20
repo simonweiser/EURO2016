@@ -32,7 +32,7 @@ public class Country {
 		this.h2hData = h2hData;
 
 		TARGET_FLAG_SIZE_CENTER = FLAG_SIZE * 6f;
-		TARGET_FLAG_SIZE_RADIAL = FLAG_SIZE * 1.5f;
+		TARGET_FLAG_SIZE_RADIAL = FLAG_SIZE;
 	}
 
 	public PApplet getParent() {
@@ -128,33 +128,66 @@ public class Country {
 		PVector centerFlagPosition = selectedCountry.getFlag_position();
 		float centerFlagSize = selectedCountry.getFLAG_SIZE();
 
-		float cx = parent.width / 2;
-		float cy = parent.height / 2;
-		float r = parent.height / 2.5f;
+		int played = 0;
+		int won = 0;
+		int draw = 0;
+		int lost = 0;
+		int goalsAggainst = 0;
+		int goalsFor = 0;
+
+		int minPlayed = 0;
+		int maxPlayed = 0;
+
+		for (TableRow row : h2hData.rows()) {
+			String opponentName = row.getString("opponent");
+			if (selectedCountry.getName().equals(opponentName)) {
+				played = row.getInt("played");
+				won = row.getInt("lost");
+				draw = row.getInt("draw");
+				lost = row.getInt("won");
+				goalsAggainst = row.getInt("goals_for");
+				goalsFor = row.getInt("goals_aggainst");
+
+				for (TableRow selectedCountryRow : selectedCountry.getH2hData().rows()) {
+					int currentPlayed = selectedCountryRow.getInt("played");
+					if (currentPlayed > maxPlayed) {
+						maxPlayed = currentPlayed;
+					}
+				}
+			}
+		}
 
 		float red = 0f;
 		float green = 0f;
 		float blue = 0f;
 
-		for (TableRow row : h2hData.rows()) {
-			String opponentName = row.getString("opponent");
-			if (selectedCountry.getName().equals(opponentName)) {
-				int played = row.getInt("played");
-				int won = row.getInt("lost");
-				int draw = row.getInt("draw");
-				int lost = row.getInt("won");
-				int goalsAggainst = row.getInt("goals_for");
-				int goalsFor = row.getInt("goals_aggainst");
-
-				if (won > lost) {
-					green = 255f;
-				} else {
-					red = 255f;
-				}
-
-				break;
-			}
+		// COLOR
+		if (won > lost) {
+			red = 0f;
+			green = 255f;
+			blue = 0f;
+		} else if (won < lost) {
+			red = 255f;
+			green = 0f;
+			blue = 0f;
+		} else {
+			red = 0f;
+			green = 0f;
+			blue = 0f;
 		}
+
+		// DRAW LINE
+		if (played != 0) {
+			parent.stroke(red, green, blue);
+			parent.line(centerFlagPosition.x + centerFlagSize / 2, centerFlagPosition.y + centerFlagSize / 2,
+					flag_position.x, flag_position.y);
+		}
+
+		// RADIUS
+		float cx = parent.width / 2;
+		float cy = parent.height / 2;
+		// float r = parent.height / 2.5f;
+		float r = PApplet.map(played, 0, maxPlayed, parent.height / 4f, parent.height / 2.5f);
 
 		float ds = TARGET_FLAG_SIZE_RADIAL - FLAG_SIZE;
 		FLAG_SIZE += ds * SPEED;
@@ -167,9 +200,7 @@ public class Country {
 		float dy = targetY - flag_position.y;
 		flag_position.y += dy * SPEED;
 
-		parent.stroke(red, green, blue);
-		parent.line(centerFlagPosition.x + centerFlagSize / 2, centerFlagPosition.y + centerFlagSize / 2,
-				flag_position.x, flag_position.y);
+		// DRAW RADIAL FLAG
 		parent.image(flag_img, flag_position.x - FLAG_SIZE, flag_position.y - FLAG_SIZE, FLAG_SIZE * 2, FLAG_SIZE * 2);
 
 	}

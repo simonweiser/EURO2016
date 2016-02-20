@@ -52,6 +52,9 @@ public class Sketch extends PApplet {
 		image(logo, 10, height - 160, 110, 146);
 
 		float i = 0;
+
+		sortCountriesByPlayed();
+
 		for (Country country : countries) {
 			if (!country.isMouseOver()) {
 				country.displayDetailRadial(i, selectedCountry);
@@ -60,6 +63,22 @@ public class Sketch extends PApplet {
 		}
 
 		selectedCountry.displayDetailCenter();
+	}
+
+	private void sortCountriesByPlayed() {
+		ArrayList<Country> countriesCopy = new ArrayList<Country>();
+		countriesCopy.addAll(countries);
+
+		ArrayList<Country> countriesSortedByPlayed = new ArrayList<Country>();
+
+		// for (TableRow selectedCountryRow :
+		// selectedCountry.getH2hData().rows()) {
+		// int currentPlayed = selectedCountryRow.getInt("played");
+		// if (currentPlayed > maxPlayed) {
+		// maxPlayed = currentPlayed;
+		// }
+		// }
+
 	}
 
 	public void mouseClicked() {
