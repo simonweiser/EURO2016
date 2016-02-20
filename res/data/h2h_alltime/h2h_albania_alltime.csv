@@ -1,6 +1,8 @@
 lost,opponent,won,draw,goals_aggainst,played,goals_for
 6,Austria,0,0,17,6,1
 1,Belgium,1,0,3,2,3
+0,Croatia,0,0,0,0,0
+0,Czech Republic,0,0,0,0,0
 4,England,0,0,12,4,1
 4,France,1,1,12,6,3
 13,Germany,0,1,38,14,10
@@ -13,6 +15,7 @@ lost,opponent,won,draw,goals_aggainst,played,goals_for
 3,Republic of Ireland,0,1,6,4,2
 11,Romania,2,3,41,16,9
 1,Russia,1,0,5,2,4
+0,Slovakia,0,0,0,0,0
 5,Spain,0,0,24,5,2
 3,Sweden,1,1,10,5,5
 5,Switzerland,0,1,11,6,4
