@@ -151,7 +151,7 @@ public class Sketch extends PApplet {
 					country.setMouseOverDetail(false);
 				}
 
-				country.displayDetailRadial(i, selectedCountry);
+				country.displayDetailRadial(i, selectedCountry, false);
 				i++;
 			}
 		}
@@ -167,7 +167,7 @@ public class Sketch extends PApplet {
 		background(200);
 		image(logo, 10, height - 160, 110, 146);
 
-		selectedCountryDetail.displayDetailRadial(13, selectedCountry);
+		selectedCountryDetail.displayDetailRadial(13, selectedCountry, true);
 		selectedCountry.displayDetailCenter();
 	}
 
