@@ -240,7 +240,8 @@ public class Sketch extends PApplet {
 		PImage hover_img = loadImage("res/img/nationalflaggen/" + name.toLowerCase() + ".png");
 		hover_img.filter(POSTERIZE, 2);
 		Table h2hData = loadTable("res/data/h2h_alltime/h2h_" + name.toLowerCase() + "_alltime.csv", "header");
-		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, false, h2hData);
+		Table countryInfo = loadTable("res/data/team_info/team_info_" + name.toLowerCase() + ".csv", "header");
+		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, false, h2hData, countryInfo);
 		countries.add(country);
 	}
 
