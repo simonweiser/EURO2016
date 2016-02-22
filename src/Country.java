@@ -329,6 +329,7 @@ public class Country {
 		String wm = countryInfo.getString(0, "wm");
 		String em = countryInfo.getString(0, "em");
 		parent.textAlign(PApplet.CENTER);
+		parent.textSize(12);
 		parent.text("Trainer: " + trainer + " Rang: " + rang + " Alter: " + age + " Marktwert: " + marktwert
 				+ " WM-Titel: " + wm + " EM-Titel: " + em, parent.width / 2, parent.height / 2);
 	}
