@@ -205,19 +205,30 @@ public class Country {
 			parent.noFill();
 
 			// win line
-			parent.stroke(0, 255, 0);
-			parent.strokeWeight(5);
-			parent.bezier(x1, y1, x1, 0, x2, 0, x2, y2);
+			if (won > 0) {
+				float sw = PApplet.map(won, 0, played, 0, 20);
+				parent.strokeWeight(sw);
+				parent.stroke(0, 255, 0);
+				parent.bezier(x1, y1, x1, 0, x2, 0, x2, y2);
+			}
 
 			// draw line
-			parent.stroke(0, 0, 0);
-			parent.strokeWeight(5);
-			parent.line(x1, y1, x2, y2);
+			if (draw > 0) {
+				float sw = PApplet.map(draw, 0, played, 0, 20);
+				parent.strokeWeight(sw);
+				parent.stroke(0, 0, 0);
+				parent.line(x1, y1, x2, y2);
+			}
 
 			// lost line
-			parent.stroke(255, 0, 0);
-			parent.strokeWeight(5);
-			parent.bezier(x1, y1, x1, parent.height, x2, parent.height, x2, y2);
+			if (lost > 0) {
+				float sw = PApplet.map(lost, 0, played, 0, 20);
+				parent.strokeWeight(sw);
+				parent.strokeWeight(sw);
+				parent.stroke(255, 0, 0);
+				parent.bezier(x1, y1, x1, parent.height, x2, parent.height, x2, y2);
+			}
+
 		}
 
 		// RADIUS
