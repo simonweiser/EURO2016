@@ -65,6 +65,10 @@ public class Sketch extends PApplet {
 			updateScene3(mouseX, mouseY);
 			break;
 
+		case 4:
+			updateScene4(mouseX, mouseY);
+			break;
+
 		default:
 			println("ERROR: DRAW");
 			updateScene1(mouseX, mouseY);
@@ -102,6 +106,10 @@ public class Sketch extends PApplet {
 			if (selectedCountry != null && selectedCountryDetail != null) {
 				drawSceneNum = 3;
 			}
+			if (selectedCountry.isMouseOverCenter()) {
+				drawSceneNum = 4;
+			}
+
 		} else {
 			switch (drawSceneNum) {
 			case 1:
@@ -112,9 +120,12 @@ public class Sketch extends PApplet {
 				break;
 
 			case 3:
-				drawSceneNum--;
+				drawSceneNum = 2;
 				break;
 
+			case 4:
+				drawSceneNum = 2;
+				break;
 			default:
 				println("ERROR: MOUSECLICKED");
 				break;
@@ -171,6 +182,12 @@ public class Sketch extends PApplet {
 			selectedCountryDetail = null;
 		}
 
+		if (overCountry(selectedCountry.getFlag_position().x + selectedCountry.getFLAG_SIZE() / 2, selectedCountry.getFlag_position().y + selectedCountry.getFLAG_SIZE() / 2, selectedCountry.getFLAG_SIZE())) {
+			selectedCountry.setMouseOverCenter(true);
+		} else {
+			selectedCountry.setMouseOverCenter(false);
+		}
+
 		selectedCountry.displayDetailCenter();
 	}
 
@@ -181,6 +198,13 @@ public class Sketch extends PApplet {
 
 		selectedCountryDetail.displayDetailRadial(13, selectedCountry, true);
 		selectedCountry.displayDetailCenter();
+	}
+
+	private void updateScene4(int mouseX, int mouseY) {
+		background(200);
+		image(logo, 10, height - 160, 110, 146);
+
+		selectedCountry.displayDetailInfo();
 	}
 
 	private boolean overCountry(float x, float y, float diameter) {
@@ -228,7 +252,8 @@ public class Sketch extends PApplet {
 		PImage hover_img = loadImage("res/img/nationalflaggen/" + name.toLowerCase() + ".png");
 		hover_img.filter(POSTERIZE, 2);
 		Table h2hData = loadTable("res/data/h2h_alltime/h2h_" + name.toLowerCase() + "_alltime.csv", "header");
-		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, false, h2hData);
+		Table countryInfo = loadTable("res/data/team_info/team_info_" + name.toLowerCase() + ".csv", "header");
+		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, false, h2hData, countryInfo);
 		countries.add(country);
 	}
 

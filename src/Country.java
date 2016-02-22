@@ -14,15 +14,16 @@ public class Country {
 	private PImage flag_img, hover_img;
 	private boolean mouseOver;
 	private boolean mouseOverDetail;
+	private boolean mouseOverCenter = false;
 
 	// opponent, played, won, draw, lost, goals_for, goals_aggainst
-	private Table h2hData;
+	private Table h2hData, countryInfo;
 
 	float TARGET_FLAG_SIZE_CENTER;
 	float TARGET_FLAG_SIZE_RADIAL;
 
 	public Country(PApplet parent, float FLAG_SIZE, String name, PVector flag_position, PImage flag_img,
-			PImage hover_img, boolean mouseOver, Table h2hData) {
+			PImage hover_img, boolean mouseOver, Table h2hData, Table countryInfo) {
 		this.parent = parent;
 		this.FLAG_SIZE = FLAG_SIZE;
 		this.name = name;
@@ -31,6 +32,7 @@ public class Country {
 		this.hover_img = hover_img;
 		this.mouseOver = mouseOver;
 		this.h2hData = h2hData;
+		this.setCountryInfo(countryInfo);
 
 		this.setMouseOverDetail(false);
 
@@ -102,12 +104,28 @@ public class Country {
 		this.h2hData = h2hData;
 	}
 
+	public Table getCountryInfo() {
+		return countryInfo;
+	}
+
+	public void setCountryInfo(Table countryInfo) {
+		this.countryInfo = countryInfo;
+	}
+
 	public boolean isMouseOverDetail() {
 		return mouseOverDetail;
 	}
 
 	public void setMouseOverDetail(boolean mouseOverDetail) {
 		this.mouseOverDetail = mouseOverDetail;
+	}
+
+	public boolean isMouseOverCenter() {
+		return mouseOverCenter;
+	}
+
+	public void setMouseOverCenter(boolean mouseOverCenter) {
+		this.mouseOverCenter = mouseOverCenter;
 	}
 
 	public void display() {
@@ -132,7 +150,12 @@ public class Country {
 		float dy = targetY - flag_position.y;
 		flag_position.y += dy * SPEED;
 
-		parent.image(flag_img, flag_position.x, flag_position.y, FLAG_SIZE, FLAG_SIZE);
+		if (mouseOverCenter) {
+			parent.image(hover_img, flag_position.x, flag_position.y, FLAG_SIZE, FLAG_SIZE);
+		} else {
+			parent.image(flag_img, flag_position.x, flag_position.y, FLAG_SIZE, FLAG_SIZE);
+		}
+
 	}
 
 	public void displayDetailRadial(float i, Country selectedCountry, boolean showDetail) {
@@ -296,6 +319,18 @@ public class Country {
 		parent.textAlign(PApplet.CENTER);
 		parent.text("played: " + played, parent.width / 2, parent.height - 50);
 
+	}
+
+	public void displayDetailInfo() {
+		String trainer = countryInfo.getString(0, "trainer");
+		String rang = countryInfo.getString(0, "rang");
+		String age = countryInfo.getString(0, "age");
+		String marktwert = countryInfo.getString(0, "marktwert");
+		String wm = countryInfo.getString(0, "wm");
+		String em = countryInfo.getString(0, "em");
+		parent.textAlign(PApplet.CENTER);
+		parent.text("Trainer: " + trainer + " Rang: " + rang + " Alter: " + age + " Marktwert: " + marktwert
+				+ " WM-Titel: " + wm + " EM-Titel: " + em, parent.width / 2, parent.height / 2);
 	}
 
 }
