@@ -3,12 +3,14 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import processing.core.PApplet;
+import processing.core.PFont;
 import processing.core.PImage;
 import processing.core.PVector;
 import processing.data.Table;
 
 public class Sketch extends PApplet {
 
+	PImage background;
 	PImage logo;
 	PImage map;
 	MercatorMap mercatorMap;
@@ -20,6 +22,10 @@ public class Sketch extends PApplet {
 	int drawSceneNum;
 
 	public void setup() {
+
+		PFont f = loadFont("res/font/BlairMdITCTT-Medium-48.vlw");
+		textFont(f, 48);
+
 		FLAG_SIZE = height / 30f;
 
 		map = loadImage("res/img/map.png");
@@ -28,6 +34,10 @@ public class Sketch extends PApplet {
 
 		logo = loadImage("res/img/em2016_logo.png");
 		image(logo, 10, height - 160, 110, 146);
+
+		background = loadImage("res/img/background_stadium.png");
+		background.resize(width, height);
+		background.filter(BLUR, 6);
 
 		drawSceneNum = 1;
 		selectedCountry = null;
@@ -134,7 +144,8 @@ public class Sketch extends PApplet {
 	}
 
 	private void updateScene2(int mouseX, int mouseY) {
-		background(200);
+		// background(200);
+		image(background, 0, 0);
 		image(logo, 10, height - 160, 110, 146);
 
 		float i = 0;
@@ -164,7 +175,8 @@ public class Sketch extends PApplet {
 	}
 
 	private void updateScene3(int mouseX, int mouseY) {
-		background(200);
+		// background(200);
+		image(background, 0, 0);
 		image(logo, 10, height - 160, 110, 146);
 
 		selectedCountryDetail.displayDetailRadial(13, selectedCountry, true);

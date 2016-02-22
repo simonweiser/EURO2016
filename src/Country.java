@@ -200,35 +200,9 @@ public class Country {
 			parent.line(x1, y1, x2, y2);
 		}
 
-		// DRAW DETAIL LINE
+		// DRAW DETAIL LINES AND TEXT
 		if (played != 0 && showDetail) {
-			parent.noFill();
-
-			// win line
-			if (won > 0) {
-				float sw = PApplet.map(won, 0, played, 0, 20);
-				parent.strokeWeight(sw);
-				parent.stroke(0, 255, 0);
-				parent.bezier(x1, y1, x1, 0, x2, 0, x2, y2);
-			}
-
-			// draw line
-			if (draw > 0) {
-				float sw = PApplet.map(draw, 0, played, 0, 20);
-				parent.strokeWeight(sw);
-				parent.stroke(0, 0, 0);
-				parent.line(x1, y1, x2, y2);
-			}
-
-			// lost line
-			if (lost > 0) {
-				float sw = PApplet.map(lost, 0, played, 0, 20);
-				parent.strokeWeight(sw);
-				parent.strokeWeight(sw);
-				parent.stroke(255, 0, 0);
-				parent.bezier(x1, y1, x1, parent.height, x2, parent.height, x2, y2);
-			}
-
+			showDetail(x1, y1, x2, y2, played, won, draw, lost, selectedCountry);
 		}
 
 		// RADIUS
@@ -256,6 +230,71 @@ public class Country {
 			parent.image(flag_img, flag_position.x - FLAG_SIZE, flag_position.y - FLAG_SIZE, FLAG_SIZE * 2,
 					FLAG_SIZE * 2);
 		}
+
+	}
+
+	private void showDetail(float x1, float y1, float x2, float y2, int played, int won, int draw, int lost,
+			Country selectedCountry) {
+		if (won > 0) {
+			// win line
+			parent.noFill();
+			float sw = PApplet.map(won, 0, played, 0, 20);
+			parent.strokeWeight(sw);
+			parent.stroke(0, 255, 0);
+			parent.bezier(x1, y1, x1, 0, x2, 0, x2, y2);
+		}
+
+		if (draw > 0) {
+			// draw line
+			parent.noFill();
+			float sw = PApplet.map(draw, 0, played, 0, 20);
+			parent.strokeWeight(sw);
+			parent.stroke(0, 0, 0);
+			parent.line(x1, y1, x2, y2);
+		}
+
+		if (lost > 0) {
+			// lost line
+			parent.noFill();
+			float sw = PApplet.map(lost, 0, played, 0, 20);
+			parent.strokeWeight(sw);
+			parent.strokeWeight(sw);
+			parent.stroke(255, 0, 0);
+			parent.bezier(x1, y1, x1, parent.height, x2, parent.height, x2, y2);
+
+		}
+
+		// vs. text
+		parent.fill(255);
+		parent.textAlign(PApplet.CENTER);
+		parent.textSize(32);
+		parent.text(selectedCountry.getName(), parent.width / 4, 50);
+		parent.textSize(48);
+		parent.text("vs.", parent.width / 2, 50);
+		parent.textSize(32);
+		parent.text(name, (parent.width / 4) * 3, 50);
+
+		// win text
+		parent.textAlign(PApplet.LEFT);
+		parent.textSize(32);
+		parent.fill(0, 255, 0);
+		parent.text("won: " + won, x2 + TARGET_FLAG_SIZE_CENTER, y2 - TARGET_FLAG_SIZE_CENTER * 1.5f);
+
+		// draw text
+		parent.textSize(32);
+		parent.fill(0);
+		parent.text("draw: " + draw, x2 + TARGET_FLAG_SIZE_CENTER, y2);
+
+		// lost text
+		parent.textSize(32);
+		parent.fill(255, 0, 0);
+		parent.text("lost: " + lost, x2 + TARGET_FLAG_SIZE_CENTER, y2 + TARGET_FLAG_SIZE_CENTER * 1.5f);
+
+		// played text
+		parent.textSize(48);
+		parent.fill(255);
+		parent.textAlign(PApplet.CENTER);
+		parent.text("played: " + played, parent.width / 2, parent.height - 50);
 
 	}
 
