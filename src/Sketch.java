@@ -98,12 +98,11 @@ public class Sketch extends PApplet {
 	}
 
 	public void mouseClicked() {
-		if (mouseButton == LEFT) {
-			if (selectedCountry != null) {
-				countrySorted = sortCountriesByPlayed();
-				drawSceneNum = 2;
-			}
-			if (selectedCountry != null && selectedCountryDetail != null) {
+
+		if (mouseButton == LEFT && selectedCountry != null) {
+			countrySorted = sortCountriesByPlayed();
+			drawSceneNum = 2;
+			if (selectedCountryDetail != null) {
 				drawSceneNum = 3;
 			}
 			if (selectedCountry.isMouseOverCenter()) {
@@ -126,6 +125,7 @@ public class Sketch extends PApplet {
 			case 4:
 				drawSceneNum = 2;
 				break;
+
 			default:
 				println("ERROR: MOUSECLICKED");
 				break;
