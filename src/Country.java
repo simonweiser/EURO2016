@@ -361,7 +361,6 @@ public class Country {
 	}
 
 	public void displayDetailInfo() {
-
 		float ds = TEAM_INFO_ELLIPSE_SIZE - FLAG_SIZE;
 		FLAG_SIZE += ds * SPEED;
 
@@ -391,8 +390,8 @@ public class Country {
 			String em = countryInfo.getString(0, "em");
 
 			parent.textSize(24);
-			parent.text("Manager: " + trainer + "\n\nRank: " + rang + "\n\nAge (avg.): " + age + "\n\nMarketvalue: "
-					+ marktwert, xMid, yMid);
+			parent.text("Manager: " + trainer + "\n\nWorldrank: " + rang + "\n\nAge (avg.): " + age + "\n\nValue (€): "
+					+ marktwert + " Mio.", xMid, yMid);
 
 			parent.text(wm, xMid - 40, yMid * 1.5f);
 			parent.text(em, xMid + 40, yMid * 1.5f);
