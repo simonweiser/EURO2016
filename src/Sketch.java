@@ -78,7 +78,7 @@ public class Sketch extends PApplet {
 			}
 
 		});
-
+		
 		return countriesCopy;
 
 	}
