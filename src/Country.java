@@ -194,6 +194,8 @@ public class Country {
 
 		// DRAW LINE
 		if (played != 0 && !showDetail) {
+			float sw = PApplet.map(played, maxPlayed, 0, 45, 360);
+			parent.strokeWeight(parent.height / sw);
 			parent.stroke(red, green, blue);
 			parent.line(x1, y1, x2, y2);
 		}
@@ -222,7 +224,7 @@ public class Country {
 		float cx = parent.width / 2;
 		float cy = parent.height / 2;
 		// float r = parent.height / 2.5f;
-		float r = PApplet.map(played, 0, maxPlayed, parent.height / 4f, parent.height / 2.5f);
+		float r = PApplet.map(played, maxPlayed, 0, parent.height / 4f, parent.height / 2.5f);
 
 		float ds = TARGET_FLAG_SIZE_RADIAL - FLAG_SIZE;
 		FLAG_SIZE += ds * SPEED;
