@@ -14,6 +14,7 @@ public class Country {
 	private PImage flag_img, hover_img;
 	private boolean mouseOver;
 	private boolean mouseOverDetail;
+	private boolean mouseOverCenter = false;
 
 	// opponent, played, won, draw, lost, goals_for, goals_aggainst
 	private Table h2hData;
@@ -110,6 +111,14 @@ public class Country {
 		this.mouseOverDetail = mouseOverDetail;
 	}
 
+	public boolean isMouseOverCenter() {
+		return mouseOverCenter;
+	}
+
+	public void setMouseOverCenter(boolean mouseOverCenter) {
+		this.mouseOverCenter = mouseOverCenter;
+	}
+
 	public void display() {
 		if (mouseOver) {
 			parent.image(hover_img, flag_position.x - FLAG_SIZE / 2, flag_position.y - FLAG_SIZE / 2, FLAG_SIZE,
@@ -132,7 +141,14 @@ public class Country {
 		float dy = targetY - flag_position.y;
 		flag_position.y += dy * SPEED;
 
-		parent.image(flag_img, flag_position.x, flag_position.y, FLAG_SIZE, FLAG_SIZE);
+		
+		if (mouseOverCenter) {
+			parent.image(hover_img, flag_position.x, flag_position.y, FLAG_SIZE, FLAG_SIZE);
+		} else {
+			parent.image(flag_img, flag_position.x, flag_position.y, FLAG_SIZE, FLAG_SIZE);
+		}
+		
+		
 	}
 
 	public void displayDetailRadial(float i, Country selectedCountry, boolean showDetail) {
@@ -257,6 +273,11 @@ public class Country {
 					FLAG_SIZE * 2);
 		}
 
+	}
+
+	public void displayDetailInfo() {
+		
+		
 	}
 
 }
