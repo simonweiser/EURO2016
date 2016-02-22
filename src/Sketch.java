@@ -13,6 +13,7 @@ public class Sketch extends PApplet {
 	PImage background;
 	PImage logo;
 	PImage map;
+
 	MercatorMap mercatorMap;
 	float FLAG_SIZE;
 
@@ -182,7 +183,9 @@ public class Sketch extends PApplet {
 			selectedCountryDetail = null;
 		}
 
-		if (overCountry(selectedCountry.getFlag_position().x + selectedCountry.getFLAG_SIZE() / 2, selectedCountry.getFlag_position().y + selectedCountry.getFLAG_SIZE() / 2, selectedCountry.getFLAG_SIZE())) {
+		if (overCountry(selectedCountry.getFlag_position().x + selectedCountry.getFLAG_SIZE() / 2,
+				selectedCountry.getFlag_position().y + selectedCountry.getFLAG_SIZE() / 2,
+				selectedCountry.getFLAG_SIZE())) {
 			selectedCountry.setMouseOverCenter(true);
 		} else {
 			selectedCountry.setMouseOverCenter(false);
@@ -201,7 +204,8 @@ public class Sketch extends PApplet {
 	}
 
 	private void updateScene4(int mouseX, int mouseY) {
-		background(200);
+		// background(200);
+		image(background, 0, 0);
 		image(logo, 10, height - 160, 110, 146);
 
 		selectedCountry.displayDetailInfo();
@@ -250,10 +254,12 @@ public class Sketch extends PApplet {
 		PVector screenLoc = mercatorMap.getScreenLocation(new PVector(flag_position_x, flag_position_y));
 		PImage flag_img = loadImage("res/img/nationalflaggen/" + name.toLowerCase() + ".png");
 		PImage hover_img = loadImage("res/img/nationalflaggen/" + name.toLowerCase() + ".png");
+		PImage team_logo = loadImage("res/img/teamlogos/" + name.toLowerCase() + ".png");
 		hover_img.filter(POSTERIZE, 2);
 		Table h2hData = loadTable("res/data/h2h_alltime/h2h_" + name.toLowerCase() + "_alltime.csv", "header");
 		Table countryInfo = loadTable("res/data/team_info/team_info_" + name.toLowerCase() + ".csv", "header");
-		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, false, h2hData, countryInfo);
+		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, team_logo, false, h2hData,
+				countryInfo);
 		countries.add(country);
 	}
 

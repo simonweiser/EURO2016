@@ -11,7 +11,7 @@ public class Country {
 	private float FLAG_SIZE;
 	private String name;
 	private PVector flag_position;
-	private PImage flag_img, hover_img;
+	private PImage flag_img, hover_img, team_logo;
 	private boolean mouseOver;
 	private boolean mouseOverDetail;
 	private boolean mouseOverCenter = false;
@@ -21,23 +21,34 @@ public class Country {
 
 	float TARGET_FLAG_SIZE_CENTER;
 	float TARGET_FLAG_SIZE_RADIAL;
+	float TEAM_INFO_ELLIPSE_SIZE;
+
+	PImage wmCupIcon;
+	PImage emCupIcon;
 
 	public Country(PApplet parent, float FLAG_SIZE, String name, PVector flag_position, PImage flag_img,
-			PImage hover_img, boolean mouseOver, Table h2hData, Table countryInfo) {
+			PImage hover_img, PImage team_logo, boolean mouseOver, Table h2hData, Table countryInfo) {
 		this.parent = parent;
 		this.FLAG_SIZE = FLAG_SIZE;
 		this.name = name;
 		this.flag_position = flag_position;
 		this.flag_img = flag_img;
 		this.hover_img = hover_img;
+		this.setTeam_logo(team_logo);
 		this.mouseOver = mouseOver;
 		this.h2hData = h2hData;
-		this.setCountryInfo(countryInfo);
+		this.countryInfo = countryInfo;
 
 		this.setMouseOverDetail(false);
 
 		TARGET_FLAG_SIZE_CENTER = FLAG_SIZE * 6f;
 		TARGET_FLAG_SIZE_RADIAL = FLAG_SIZE;
+		TEAM_INFO_ELLIPSE_SIZE = FLAG_SIZE * 20f;
+
+		wmCupIcon = parent.loadImage("res/img/wm_cup.png");
+		wmCupIcon.resize(50, 50);
+		emCupIcon = parent.loadImage("res/img/em_cup.png");
+		emCupIcon.resize(50, 50);
 	}
 
 	public PApplet getParent() {
@@ -126,6 +137,14 @@ public class Country {
 
 	public void setMouseOverCenter(boolean mouseOverCenter) {
 		this.mouseOverCenter = mouseOverCenter;
+	}
+
+	public PImage getTeam_logo() {
+		return team_logo;
+	}
+
+	public void setTeam_logo(PImage team_logo) {
+		this.team_logo = team_logo;
 	}
 
 	public void display() {
@@ -226,6 +245,8 @@ public class Country {
 		// DRAW DETAIL LINES AND TEXT
 		if (played != 0 && showDetail) {
 			showDetail(x1, y1, x2, y2, played, won, draw, lost, selectedCountry);
+		} else if (played == 0 && showDetail) {
+			showDetailNoMatchesPlayedYet(selectedCountry);
 		}
 
 		// RADIUS
@@ -321,17 +342,64 @@ public class Country {
 
 	}
 
-	public void displayDetailInfo() {
-		String trainer = countryInfo.getString(0, "trainer");
-		String rang = countryInfo.getString(0, "rang");
-		String age = countryInfo.getString(0, "age");
-		String marktwert = countryInfo.getString(0, "marktwert");
-		String wm = countryInfo.getString(0, "wm");
-		String em = countryInfo.getString(0, "em");
+	private void showDetailNoMatchesPlayedYet(Country selectedCountry) {
+		// vs. text
+		parent.fill(255);
 		parent.textAlign(PApplet.CENTER);
-		parent.textSize(12);
-		parent.text("Trainer: " + trainer + " Rang: " + rang + " Alter: " + age + " Marktwert: " + marktwert
-				+ " WM-Titel: " + wm + " EM-Titel: " + em, parent.width / 2, parent.height / 2);
+		parent.textSize(32);
+		parent.text(selectedCountry.getName(), parent.width / 4, 50);
+		parent.textSize(48);
+		parent.text("vs.", parent.width / 2, 50);
+		parent.textSize(32);
+		parent.text(name, (parent.width / 4) * 3, 50);
+
+		// played text
+		parent.textSize(48);
+		parent.fill(255);
+		parent.textAlign(PApplet.CENTER);
+		parent.text("no matches played yet", parent.width / 2, parent.height - 50);
+	}
+
+	public void displayDetailInfo() {
+
+		float ds = TEAM_INFO_ELLIPSE_SIZE - FLAG_SIZE;
+		FLAG_SIZE += ds * SPEED;
+
+		float xMid = parent.width / 2;
+		float yMid = parent.height / 2;
+
+		parent.fill(200);
+		parent.noStroke();
+		parent.ellipse(xMid, yMid, FLAG_SIZE, FLAG_SIZE);
+
+		// img-size: 100x130
+		parent.image(team_logo, xMid - 50, (yMid / 2.7f) - ds);
+
+		if (ds < 0.6) {
+
+			parent.textAlign(PApplet.CENTER);
+			parent.textSize(32);
+			parent.fill(0);
+
+			parent.text(name, xMid, yMid / 1.3f);
+
+			String trainer = countryInfo.getString(0, "trainer");
+			String rang = countryInfo.getString(0, "rang");
+			String age = countryInfo.getString(0, "age");
+			String marktwert = countryInfo.getString(0, "marktwert");
+			String wm = countryInfo.getString(0, "wm");
+			String em = countryInfo.getString(0, "em");
+
+			parent.textSize(24);
+			parent.text("Manager: " + trainer + "\n\nRank: " + rang + "\n\nAge (avg.): " + age + "\n\nMarketvalue: "
+					+ marktwert, xMid, yMid);
+
+			parent.text(wm, xMid - 40, yMid * 1.5f);
+			parent.text(em, xMid + 40, yMid * 1.5f);
+
+			parent.image(wmCupIcon, xMid - 100, yMid * 1.4f);
+			parent.image(emCupIcon, xMid + 50, yMid * 1.4f);
+		}
 	}
 
 }
