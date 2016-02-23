@@ -23,6 +23,10 @@ public class Country {
 	float TARGET_FLAG_SIZE_RADIAL;
 	float TEAM_INFO_ELLIPSE_SIZE;
 
+	float fs24;
+	float fs32;
+	float fs48;
+
 	PImage wmCupIcon;
 	PImage emCupIcon;
 
@@ -41,14 +45,19 @@ public class Country {
 
 		this.setMouseOverDetail(false);
 
-		TARGET_FLAG_SIZE_CENTER = FLAG_SIZE * 6f;
+		TARGET_FLAG_SIZE_CENTER = FLAG_SIZE * (parent.height / 133.33f);
 		TARGET_FLAG_SIZE_RADIAL = FLAG_SIZE;
-		TEAM_INFO_ELLIPSE_SIZE = FLAG_SIZE * 20f;
+		TEAM_INFO_ELLIPSE_SIZE = FLAG_SIZE * (parent.height / 40f);
 
 		wmCupIcon = parent.loadImage("res/img/wm_cup.png");
 		wmCupIcon.resize(50, 50);
 		emCupIcon = parent.loadImage("res/img/em_cup.png");
 		emCupIcon.resize(50, 50);
+
+		fs24 = parent.height / 33.33f;
+		fs32 = parent.height / 25f;
+		fs48 = parent.height / 16.66f;
+
 	}
 
 	public PApplet getParent() {
@@ -311,31 +320,31 @@ public class Country {
 		// vs. text
 		parent.fill(255);
 		parent.textAlign(PApplet.CENTER);
-		parent.textSize(32);
+		parent.textSize(fs32);
 		parent.text(selectedCountry.getName(), parent.width / 4, 50);
-		parent.textSize(48);
+		parent.textSize(fs48);
 		parent.text("vs.", parent.width / 2, 50);
-		parent.textSize(32);
+		parent.textSize(fs32);
 		parent.text(name, (parent.width / 4) * 3, 50);
 
 		// win text
 		parent.textAlign(PApplet.LEFT);
-		parent.textSize(32);
+		parent.textSize(fs32);
 		parent.fill(0, 255, 0);
 		parent.text("won: " + won, x2 + TARGET_FLAG_SIZE_CENTER, y2 - TARGET_FLAG_SIZE_CENTER * 1.5f);
 
 		// draw text
-		parent.textSize(32);
+		parent.textSize(fs32);
 		parent.fill(0);
 		parent.text("draw: " + draw, x2 + TARGET_FLAG_SIZE_CENTER, y2);
 
 		// lost text
-		parent.textSize(32);
+		parent.textSize(fs32);
 		parent.fill(255, 0, 0);
 		parent.text("lost: " + lost, x2 + TARGET_FLAG_SIZE_CENTER, y2 + TARGET_FLAG_SIZE_CENTER * 1.5f);
 
 		// played text
-		parent.textSize(48);
+		parent.textSize(fs48);
 		parent.fill(255);
 		parent.textAlign(PApplet.CENTER);
 		parent.text("played: " + played, parent.width / 2, parent.height - 50);
@@ -346,15 +355,15 @@ public class Country {
 		// vs. text
 		parent.fill(255);
 		parent.textAlign(PApplet.CENTER);
-		parent.textSize(32);
+		parent.textSize(fs32);
 		parent.text(selectedCountry.getName(), parent.width / 4, 50);
-		parent.textSize(48);
+		parent.textSize(fs48);
 		parent.text("vs.", parent.width / 2, 50);
-		parent.textSize(32);
+		parent.textSize(fs32);
 		parent.text(name, (parent.width / 4) * 3, 50);
 
 		// played text
-		parent.textSize(48);
+		parent.textSize(fs48);
 		parent.fill(255);
 		parent.textAlign(PApplet.CENTER);
 		parent.text("no matches played yet", parent.width / 2, parent.height - 50);
@@ -377,7 +386,7 @@ public class Country {
 		if (ds < 0.6) {
 
 			parent.textAlign(PApplet.CENTER);
-			parent.textSize(32);
+			parent.textSize(fs32);
 			parent.fill(0);
 
 			parent.text(name, xMid, yMid / 1.3f);
@@ -389,7 +398,7 @@ public class Country {
 			String wm = countryInfo.getString(0, "wm");
 			String em = countryInfo.getString(0, "em");
 
-			parent.textSize(24);
+			parent.textSize(fs24);
 			parent.text("Manager: " + trainer + "\n\nWorldrank: " + rang + "\n\nAge (avg.): " + age + "\n\nValue (€): "
 					+ marktwert + " Mio.", xMid, yMid);
 
