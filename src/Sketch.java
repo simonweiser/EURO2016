@@ -21,8 +21,11 @@ public class Sketch extends PApplet {
 	Country selectedCountry, selectedCountryDetail;
 
 	int drawSceneNum;
+	int currentFrameCount;
 
 	public void setup() {
+
+		smooth();
 
 		PFont f = loadFont("res/font/BlairMdITCTT-Medium-48.vlw");
 		textFont(f, 48);
@@ -43,6 +46,7 @@ public class Sketch extends PApplet {
 		drawSceneNum = 1;
 		selectedCountry = null;
 		selectedCountryDetail = null;
+		currentFrameCount = 0;
 
 		createCountries();
 
@@ -75,7 +79,6 @@ public class Sketch extends PApplet {
 			updateScene1(mouseX, mouseY);
 			break;
 		}
-
 	}
 
 	private void reset() {
@@ -120,11 +123,15 @@ public class Sketch extends PApplet {
 	}
 
 	public void mouseClicked() {
-
 		if (mouseButton == LEFT && selectedCountry != null) {
 			countrySorted = sortCountriesByPlayed();
 			drawSceneNum = 2;
 			if (selectedCountryDetail != null) {
+				for (Country country : countries) {
+					country.setGoalsForCounter(0);
+					country.setGoalsAggainstCounter(0);
+				}
+				currentFrameCount = frameCount;
 				drawSceneNum = 3;
 			}
 			if (selectedCountry.isMouseOverCenter()) {
@@ -156,7 +163,6 @@ public class Sketch extends PApplet {
 	}
 
 	private void updateScene1(int x, int y) {
-
 		boolean isMouseOverCountry = false;
 
 		for (Country country : countries) {
@@ -177,9 +183,8 @@ public class Sketch extends PApplet {
 	}
 
 	private void updateScene2(int mouseX, int mouseY) {
-		// background(200);
 		image(background, 0, 0);
-		image(logo, 10, height - 160, 110, 146);
+		// image(logo, 10, height - 160, 110, 146);
 
 		float i = 0;
 		boolean isMouseOverCountry = false;
@@ -195,7 +200,7 @@ public class Sketch extends PApplet {
 					country.setMouseOverDetail(false);
 				}
 
-				country.displayDetailRadial(i, selectedCountry, false);
+				country.displayDetailRadial(i, selectedCountry, false, 0);
 				i++;
 			}
 		}
@@ -214,18 +219,17 @@ public class Sketch extends PApplet {
 	}
 
 	private void updateScene3(int mouseX, int mouseY) {
-		// background(200);
 		image(background, 0, 0);
-		image(logo, 10, height - 160, 110, 146);
+		// image(logo, 10, height - 160, 110, 146);
 
-		selectedCountryDetail.displayDetailRadial(13, selectedCountry, true);
+		selectedCountryDetail.displayDetailRadial(13, selectedCountry, true, currentFrameCount);
 		selectedCountry.displayDetailCenter();
 	}
 
 	private void updateScene4(int mouseX, int mouseY) {
 		// background(200);
 		image(background, 0, 0);
-		image(logo, 10, height - 160, 110, 146);
+		// image(logo, 10, height - 160, 110, 146);
 
 		selectedCountry.displayDetailInfo();
 	}
