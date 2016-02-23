@@ -247,16 +247,9 @@ public class Country {
 
 			// STROKE WEIGHT
 			if (won > lost) {
-				if (lost != 0)
-					sw = PApplet.map(won - lost, 1, won - 1, 360, 45);
-				else
-					sw = 40;
+				sw = PApplet.map(won - lost, 1, won, 360, 40);
 			} else if (won < lost) {
-				if (won != 0)
-					sw = PApplet.map(lost - won, 1, lost - 1, 360, 45);
-
-				else
-					sw = 40;
+				sw = PApplet.map(lost - won, 1, lost, 360, 40);
 			} else {
 				sw = 200;
 			}
