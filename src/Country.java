@@ -1,3 +1,5 @@
+import java.util.LinkedList;
+
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
@@ -10,14 +12,14 @@ public class Country {
 	private PApplet parent;
 	private float FLAG_SIZE;
 	private String name;
-	private PVector flag_position;
+	private PVector flag_position, initialFlagPos;
 	private PImage flag_img, hover_img, team_logo, field;;
 	private boolean mouseOver;
 	private boolean mouseOverDetail;
 	private boolean mouseOverCenter = false;
 
 	// opponent, played, won, draw, lost, goals_for, goals_aggainst
-	private Table h2hData, countryInfo;
+	private Table h2hData, countryInfo, players;
 
 	float TARGET_FLAG_SIZE_CENTER;
 	float TARGET_FLAG_SIZE_RADIAL;
@@ -30,10 +32,10 @@ public class Country {
 
 	PImage wmCupIcon;
 	PImage emCupIcon;
-	PImage player_icon;
-	
-	
-	public Country(PApplet parent, float FLAG_SIZE, String name, PVector flag_position, PImage flag_img, PImage hover_img, PImage team_logo, boolean mouseOver, Table h2hData, Table countryInfo) {
+
+	LinkedList<Player> playerList;
+
+	public Country(PApplet parent, float FLAG_SIZE, String name, PVector flag_position, PImage flag_img, PImage hover_img, PImage team_logo, boolean mouseOver, Table h2hData, Table countryInfo, Table players) {
 		this.parent = parent;
 		this.FLAG_SIZE = FLAG_SIZE;
 		this.name = name;
@@ -44,6 +46,9 @@ public class Country {
 		this.mouseOver = mouseOver;
 		this.h2hData = h2hData;
 		this.countryInfo = countryInfo;
+		this.players = players;
+
+		this.setInitialFlagPos(flag_position.copy());
 
 		this.setMouseOverDetail(false);
 
@@ -51,17 +56,34 @@ public class Country {
 		TARGET_FLAG_SIZE_RADIAL = FLAG_SIZE;
 		TEAM_INFO_ELLIPSE_SIZE = FLAG_SIZE * (parent.height / 40f);
 		PLAYER_SIZE = FLAG_SIZE;
-				
+
 		wmCupIcon = parent.loadImage("res/img/wm_cup.png");
 		wmCupIcon.resize(50, 50);
 		emCupIcon = parent.loadImage("res/img/em_cup.png");
 		emCupIcon.resize(50, 50);
-		player_icon = parent.loadImage("res/img/spieler/hummels.jpg");
 		field = parent.loadImage("res/img/field.png");
-		
+
 		fs24 = parent.height / 33.33f;
 		fs32 = parent.height / 25f;
 		fs48 = parent.height / 16.66f;
+
+		playerList = new LinkedList<Player>();
+
+		for (TableRow row : players.rows()) {
+			String playerName = row.getString("name");
+			String birthday = row.getString("birthday");
+			String teamName = row.getString("team/_alt");
+			String position = row.getString("position");
+			String value = row.getString("value");
+			int number = row.getInt("number");
+
+			PImage playerImg = parent.loadImage("res/data/players/images/player_" + playerName + "_pic.png");
+			PImage teamImg = parent.loadImage("res/data/players/images/player_" + playerName + "_team.png");
+
+			Player p = new Player(playerName, birthday, teamName, position, value, number, playerImg, teamImg);
+
+			playerList.add(p);
+		}
 
 	}
 
@@ -135,6 +157,14 @@ public class Country {
 
 	public void setCountryInfo(Table countryInfo) {
 		this.countryInfo = countryInfo;
+	}
+
+	public Table getPlayers() {
+		return players;
+	}
+
+	public void setPlayers(Table players) {
+		this.players = players;
 	}
 
 	public boolean isMouseOverDetail() {
@@ -253,9 +283,15 @@ public class Country {
 
 			// STROKE WEIGHT
 			if (won > lost) {
-				sw = PApplet.map(won - lost, 1, won, 360, 40);
+				if (won == 1)
+					sw = 360;
+				else
+					sw = PApplet.map(won - lost, 1, won, 360, 40);
 			} else if (won < lost) {
-				sw = PApplet.map(lost - won, 1, lost, 360, 40);
+				if (lost == 1)
+					sw = 360;
+				else
+					sw = PApplet.map(lost - won, 1, lost, 360, 40);
 			} else {
 				sw = 200;
 			}
@@ -380,6 +416,14 @@ public class Country {
 		parent.text("no matches played yet", parent.width / 2, parent.height - 50);
 	}
 
+	public PVector getInitialFlagPos() {
+		return initialFlagPos;
+	}
+
+	public void setInitialFlagPos(PVector initialFlagPos) {
+		this.initialFlagPos = initialFlagPos;
+	}
+
 	public void displayDetailInfo() {
 
 		// Außen
@@ -387,33 +431,37 @@ public class Country {
 		float xMid = parent.width / 2;
 		float yMid = parent.height / 2;
 
-		float r = TEAM_INFO_ELLIPSE_SIZE / 2.0f + player_icon.width;
+		float r = TEAM_INFO_ELLIPSE_SIZE / 2.0f;
+		// float r = TEAM_INFO_ELLIPSE_SIZE / 2.0f + player_icon.width;
 		// float r = PApplet.map(played, maxPlayed, 0, parent.height / 4f, parent.height / 2.5f);
 
-		for (int i = 0; i < 23; i++) {
+		float i = 0;
 
-			float targetX = xMid + r * PApplet.cos(PApplet.radians((float) (i * (360f / 23f))));
-//			float dx = targetX - flag_position.x;
-//			flag_position.x += dx * SPEED;
+		for (Player player : playerList) {
 
-			float targetY = yMid + r * PApplet.sin(PApplet.radians((float) (i * (360f / 23f))));
-//			float dy = targetY - flag_position.y;
-//			flag_position.y += dy * SPEED;
+			float targetX = xMid + r * PApplet.cos(PApplet.radians((float) (i * (360f / (float) players.getRowCount()))));
+			// float dx = targetX - flag_position.x;
+			// flag_position.x += dx * SPEED;
 
-			parent.image(player_icon, targetX - PLAYER_SIZE/2, targetY - PLAYER_SIZE/2, player_icon.width, player_icon.height);
+			float targetY = yMid + r * PApplet.sin(PApplet.radians((float) (i * (360f / (float) players.getRowCount()))));
+			// float dy = targetY - flag_position.y;
+			// flag_position.y += dy * SPEED;
 
+			parent.image(player.getPlayerImg(), targetX - PLAYER_SIZE / 2, targetY - PLAYER_SIZE / 2, player.getPlayerImg().width, player.getPlayerImg().height);
+
+			i++;
 		}
-		
+
 		// Mitte
 		float ds = TEAM_INFO_ELLIPSE_SIZE - FLAG_SIZE;
 		FLAG_SIZE += ds * SPEED;
 
 		parent.fill(255);
 		parent.noStroke();
-		parent.ellipse(xMid, yMid, FLAG_SIZE-1, FLAG_SIZE-1);
+		parent.ellipse(xMid, yMid, FLAG_SIZE - 1, FLAG_SIZE - 1);
 
-		parent.image(field ,xMid-FLAG_SIZE/2, yMid-FLAG_SIZE/2, FLAG_SIZE, FLAG_SIZE);
-		
+		parent.image(field, xMid - FLAG_SIZE / 2, yMid - FLAG_SIZE / 2, FLAG_SIZE, FLAG_SIZE);
+
 		// img-size: 100x130
 		parent.image(team_logo, xMid - 50, (yMid / 2.7f) - ds);
 
@@ -441,6 +489,6 @@ public class Country {
 			parent.image(wmCupIcon, xMid - 100, yMid * 1.4f);
 			parent.image(emCupIcon, xMid + 10, yMid * 1.4f);
 		}
-	}
 
+	}
 }

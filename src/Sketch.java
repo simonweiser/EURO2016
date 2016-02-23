@@ -78,6 +78,27 @@ public class Sketch extends PApplet {
 
 	}
 
+	private void reset() {
+
+		FLAG_SIZE = height / 30f;
+
+		image(map, 0, 0, width, height);
+		image(logo, 10, height - 160, 110, 146);
+
+		drawSceneNum = 1;
+		selectedCountry = null;
+		selectedCountryDetail = null;
+
+		// reset countries
+		for (Country country : countries) {
+			country.setFLAG_SIZE(FLAG_SIZE);
+			country.setFlag_position(country.getInitialFlagPos().copy());
+			country.setMouseOver(false);
+			country.setMouseOverDetail(false);
+		}
+
+	}
+
 	private ArrayList<Country> sortCountriesByPlayed() {
 		ArrayList<Country> countriesCopy = new ArrayList<Country>();
 		countriesCopy.addAll(countries);
@@ -116,7 +137,7 @@ public class Sketch extends PApplet {
 				break;
 
 			case 2:
-				setup();
+				reset();
 				break;
 
 			case 3:
@@ -183,9 +204,7 @@ public class Sketch extends PApplet {
 			selectedCountryDetail = null;
 		}
 
-		if (overCountry(selectedCountry.getFlag_position().x + selectedCountry.getFLAG_SIZE() / 2,
-				selectedCountry.getFlag_position().y + selectedCountry.getFLAG_SIZE() / 2,
-				selectedCountry.getFLAG_SIZE())) {
+		if (overCountry(selectedCountry.getFlag_position().x + selectedCountry.getFLAG_SIZE() / 2, selectedCountry.getFlag_position().y + selectedCountry.getFLAG_SIZE() / 2, selectedCountry.getFLAG_SIZE())) {
 			selectedCountry.setMouseOverCenter(true);
 		} else {
 			selectedCountry.setMouseOverCenter(false);
@@ -258,8 +277,8 @@ public class Sketch extends PApplet {
 		hover_img.filter(POSTERIZE, 2);
 		Table h2hData = loadTable("res/data/h2h_alltime/h2h_" + name.toLowerCase() + "_alltime.csv", "header");
 		Table countryInfo = loadTable("res/data/team_info/team_info_" + name.toLowerCase() + ".csv", "header");
-		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, team_logo, false, h2hData,
-				countryInfo);
+		Table players = loadTable("res/data/players/playersCSV/players_" + name.toLowerCase() + ".csv", "header");
+		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, team_logo, false, h2hData, countryInfo, players);
 		countries.add(country);
 	}
 
