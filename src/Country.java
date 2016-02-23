@@ -11,7 +11,7 @@ public class Country {
 	private float FLAG_SIZE;
 	private String name;
 	private PVector flag_position;
-	private PImage flag_img, hover_img, team_logo;
+	private PImage flag_img, hover_img, team_logo, field;;
 	private boolean mouseOver;
 	private boolean mouseOverDetail;
 	private boolean mouseOverCenter = false;
@@ -22,6 +22,7 @@ public class Country {
 	float TARGET_FLAG_SIZE_CENTER;
 	float TARGET_FLAG_SIZE_RADIAL;
 	float TEAM_INFO_ELLIPSE_SIZE;
+	float PLAYER_SIZE;
 
 	float fs24;
 	float fs32;
@@ -30,6 +31,7 @@ public class Country {
 	PImage wmCupIcon;
 	PImage emCupIcon;
 	PImage football;
+	PImage player_icon;
 
 	float ballPosX;
 	float ballPosY;
@@ -54,6 +56,7 @@ public class Country {
 		TARGET_FLAG_SIZE_CENTER = FLAG_SIZE * (parent.height / 133.33f);
 		TARGET_FLAG_SIZE_RADIAL = FLAG_SIZE;
 		TEAM_INFO_ELLIPSE_SIZE = FLAG_SIZE * (parent.height / 40f);
+		PLAYER_SIZE = FLAG_SIZE;
 
 		wmCupIcon = parent.loadImage("res/img/wm_cup.png");
 		wmCupIcon.resize(50, 50);
@@ -61,6 +64,9 @@ public class Country {
 		emCupIcon.resize(50, 50);
 		football = parent.loadImage("res/img/football.png");
 		football.resize(20, 20);
+
+		player_icon = parent.loadImage("res/img/spieler/hummels.jpg");
+		field = parent.loadImage("res/img/field.png");
 
 		fs24 = parent.height / 33.33f;
 		fs32 = parent.height / 25f;
@@ -169,6 +175,22 @@ public class Country {
 		this.team_logo = team_logo;
 	}
 
+	public int getGoalsForCounter() {
+		return goalsForCounter;
+	}
+
+	public void setGoalsForCounter(int goalsForCounter) {
+		this.goalsForCounter = goalsForCounter;
+	}
+
+	public int getGoalsAggainstCounter() {
+		return goalsAggainstCounter;
+	}
+
+	public void setGoalsAggainstCounter(int goalsAggainstCounter) {
+		this.goalsAggainstCounter = goalsAggainstCounter;
+	}
+
 	public void display() {
 		if (mouseOver) {
 			parent.image(hover_img, flag_position.x - FLAG_SIZE / 2, flag_position.y - FLAG_SIZE / 2, FLAG_SIZE,
@@ -196,9 +218,6 @@ public class Country {
 		} else {
 			parent.image(flag_img, flag_position.x, flag_position.y, FLAG_SIZE, FLAG_SIZE);
 		}
-
-		goalsForCounter = 0;
-		goalsAggainstCounter = 0;
 	}
 
 	public void displayDetailRadial(float i, Country selectedCountry, boolean showDetail, int currentFrameCount) {
@@ -259,7 +278,18 @@ public class Country {
 
 		// DRAW LINE
 		if (played != 0 && !showDetail) {
-			float sw = PApplet.map(played, maxPlayed, 0, 45, 360);
+
+			float sw = 0;
+
+			// STROKE WEIGHT
+			if (won > lost) {
+				sw = PApplet.map(won - lost, 1, won, 360, 40);
+			} else if (won < lost) {
+				sw = PApplet.map(lost - won, 1, lost, 360, 40);
+			} else {
+				sw = 200;
+			}
+
 			parent.strokeWeight(parent.height / sw);
 			parent.stroke(red, green, blue);
 			parent.line(x1, y1, x2, y2);
@@ -472,15 +502,40 @@ public class Country {
 	}
 
 	public void displayDetailInfo() {
-		float ds = TEAM_INFO_ELLIPSE_SIZE - FLAG_SIZE;
-		FLAG_SIZE += ds * SPEED;
+
+		// Außen
 
 		float xMid = parent.width / 2;
 		float yMid = parent.height / 2;
 
-		parent.fill(200);
+		float r = TEAM_INFO_ELLIPSE_SIZE / 2.0f + player_icon.width;
+		// float r = PApplet.map(played, maxPlayed, 0, parent.height / 4f,
+		// parent.height / 2.5f);
+
+		for (int i = 0; i < 23; i++) {
+
+			float targetX = xMid + r * PApplet.cos(PApplet.radians((float) (i * (360f / 23f))));
+			// float dx = targetX - flag_position.x;
+			// flag_position.x += dx * SPEED;
+
+			float targetY = yMid + r * PApplet.sin(PApplet.radians((float) (i * (360f / 23f))));
+			// float dy = targetY - flag_position.y;
+			// flag_position.y += dy * SPEED;
+
+			parent.image(player_icon, targetX - PLAYER_SIZE / 2, targetY - PLAYER_SIZE / 2, player_icon.width,
+					player_icon.height);
+
+		}
+
+		// Mitte
+		float ds = TEAM_INFO_ELLIPSE_SIZE - FLAG_SIZE;
+		FLAG_SIZE += ds * SPEED;
+
+		parent.fill(255);
 		parent.noStroke();
-		parent.ellipse(xMid, yMid, FLAG_SIZE, FLAG_SIZE);
+		parent.ellipse(xMid, yMid, FLAG_SIZE - 1, FLAG_SIZE - 1);
+
+		parent.image(field, xMid - FLAG_SIZE / 2, yMid - FLAG_SIZE / 2, FLAG_SIZE, FLAG_SIZE);
 
 		// img-size: 100x130
 		parent.image(team_logo, xMid - 50, (yMid / 2.7f) - ds);
@@ -501,14 +556,14 @@ public class Country {
 			String em = countryInfo.getString(0, "em");
 
 			parent.textSize(fs24);
-			parent.text("Manager: " + trainer + "\n\nWorldrank: " + rang + "\n\nAge (avg.): " + age + "\n\nValue (€): "
+			parent.text("Manager: " + trainer + "\n\nFIFA-Rank: " + rang + "\n\nAge (ø): " + age + "\n\nValue (€): "
 					+ marktwert + " Mio.", xMid, yMid);
 
 			parent.text(wm, xMid - 40, yMid * 1.5f);
-			parent.text(em, xMid + 40, yMid * 1.5f);
+			parent.text(em, xMid + 75, yMid * 1.5f);
 
 			parent.image(wmCupIcon, xMid - 100, yMid * 1.4f);
-			parent.image(emCupIcon, xMid + 50, yMid * 1.4f);
+			parent.image(emCupIcon, xMid + 10, yMid * 1.4f);
 		}
 	}
 

@@ -106,6 +106,10 @@ public class Sketch extends PApplet {
 			countrySorted = sortCountriesByPlayed();
 			drawSceneNum = 2;
 			if (selectedCountryDetail != null) {
+				for (Country country : countries) {
+					country.setGoalsForCounter(0);
+					country.setGoalsAggainstCounter(0);
+				}
 				currentFrameCount = frameCount;
 				drawSceneNum = 3;
 			}
