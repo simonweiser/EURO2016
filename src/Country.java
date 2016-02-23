@@ -548,27 +548,6 @@ public class Country {
 		float xMid = parent.width / 2;
 		float yMid = parent.height / 2;
 
-		float r = TEAM_INFO_ELLIPSE_SIZE / 2.0f;
-		// float r = TEAM_INFO_ELLIPSE_SIZE / 2.0f + player_icon.width;
-		// float r = PApplet.map(played, maxPlayed, 0, parent.height / 4f, parent.height / 2.5f);
-
-		float i = 0;
-
-		for (Player player : playerList) {
-
-			float targetX = xMid + r * PApplet.cos(PApplet.radians((float) (i * (360f / 23f))));
-			// float dx = targetX - flag_position.x;
-			// flag_position.x += dx * SPEED;
-
-			float targetY = yMid + r * PApplet.sin(PApplet.radians((float) (i * (360f / 23f))));
-			// float dy = targetY - flag_position.y;
-			// flag_position.y += dy * SPEED;
-
-			parent.image(player.getPlayerImg(), targetX - PLAYER_SIZE / 2, targetY - PLAYER_SIZE / 2, player.getPlayerImg().width, player.getPlayerImg().height);
-
-			i++;
-		}
-
 		// Mitte
 		float ds = TEAM_INFO_ELLIPSE_SIZE - FLAG_SIZE;
 		FLAG_SIZE += ds * SPEED;
@@ -605,6 +584,25 @@ public class Country {
 
 			parent.image(wmCupIcon, xMid - 100, yMid * 1.4f);
 			parent.image(emCupIcon, xMid + 10, yMid * 1.4f);
+		}
+
+		float r = TEAM_INFO_ELLIPSE_SIZE / 2.0f;
+
+		float i = 0;
+
+		for (Player player : playerList) {
+
+			float targetX = xMid + r * PApplet.cos(PApplet.radians((float) (i * (360f / (float) playerList.size()))));
+			// float dx = targetX - flag_position.x;
+			// flag_position.x += dx * SPEED;
+
+			float targetY = yMid + r * PApplet.sin(PApplet.radians((float) (i * (360f / (float) playerList.size()))));
+			// float dy = targetY - flag_position.y;
+			// flag_position.y += dy * SPEED;
+
+			parent.image(player.getPlayerImg(), targetX - 58 / 2, targetY - 76 / 2, 58, 76);
+
+			i++;
 		}
 
 	}
