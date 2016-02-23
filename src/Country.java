@@ -30,8 +30,7 @@ public class Country {
 	PImage wmCupIcon;
 	PImage emCupIcon;
 
-	public Country(PApplet parent, float FLAG_SIZE, String name, PVector flag_position, PImage flag_img,
-			PImage hover_img, PImage team_logo, boolean mouseOver, Table h2hData, Table countryInfo) {
+	public Country(PApplet parent, float FLAG_SIZE, String name, PVector flag_position, PImage flag_img, PImage hover_img, PImage team_logo, boolean mouseOver, Table h2hData, Table countryInfo) {
 		this.parent = parent;
 		this.FLAG_SIZE = FLAG_SIZE;
 		this.name = name;
@@ -158,11 +157,9 @@ public class Country {
 
 	public void display() {
 		if (mouseOver) {
-			parent.image(hover_img, flag_position.x - FLAG_SIZE / 2, flag_position.y - FLAG_SIZE / 2, FLAG_SIZE,
-					FLAG_SIZE);
+			parent.image(hover_img, flag_position.x - FLAG_SIZE / 2, flag_position.y - FLAG_SIZE / 2, FLAG_SIZE, FLAG_SIZE);
 		} else {
-			parent.image(flag_img, flag_position.x - FLAG_SIZE / 2, flag_position.y - FLAG_SIZE / 2, FLAG_SIZE,
-					FLAG_SIZE);
+			parent.image(flag_img, flag_position.x - FLAG_SIZE / 2, flag_position.y - FLAG_SIZE / 2, FLAG_SIZE, FLAG_SIZE);
 		}
 	}
 
@@ -245,7 +242,25 @@ public class Country {
 
 		// DRAW LINE
 		if (played != 0 && !showDetail) {
-			float sw = PApplet.map(played, maxPlayed, 0, 45, 360);
+
+			float sw = 0;
+
+			// STROKE WEIGHT
+			if (won > lost) {
+				if (lost != 0)
+					sw = PApplet.map(won - lost, 1, won - 1, 360, 45);
+				else
+					sw = 40;
+			} else if (won < lost) {
+				if (won != 0)
+					sw = PApplet.map(lost - won, 1, lost - 1, 360, 45);
+
+				else
+					sw = 40;
+			} else {
+				sw = 200;
+			}
+
 			parent.strokeWeight(parent.height / sw);
 			parent.stroke(red, green, blue);
 			parent.line(x1, y1, x2, y2);
@@ -277,17 +292,14 @@ public class Country {
 
 		// DRAW RADIAL FLAG
 		if (mouseOverDetail && !showDetail) {
-			parent.image(hover_img, flag_position.x - FLAG_SIZE, flag_position.y - FLAG_SIZE, FLAG_SIZE * 2,
-					FLAG_SIZE * 2);
+			parent.image(hover_img, flag_position.x - FLAG_SIZE, flag_position.y - FLAG_SIZE, FLAG_SIZE * 2, FLAG_SIZE * 2);
 		} else {
-			parent.image(flag_img, flag_position.x - FLAG_SIZE, flag_position.y - FLAG_SIZE, FLAG_SIZE * 2,
-					FLAG_SIZE * 2);
+			parent.image(flag_img, flag_position.x - FLAG_SIZE, flag_position.y - FLAG_SIZE, FLAG_SIZE * 2, FLAG_SIZE * 2);
 		}
 
 	}
 
-	private void showDetail(float x1, float y1, float x2, float y2, int played, int won, int draw, int lost,
-			Country selectedCountry) {
+	private void showDetail(float x1, float y1, float x2, float y2, int played, int won, int draw, int lost, Country selectedCountry) {
 		if (won > 0) {
 			// win line
 			parent.noFill();
@@ -399,8 +411,7 @@ public class Country {
 			String em = countryInfo.getString(0, "em");
 
 			parent.textSize(fs24);
-			parent.text("Manager: " + trainer + "\n\nWorldrank: " + rang + "\n\nAge (avg.): " + age + "\n\nValue (€): "
-					+ marktwert + " Mio.", xMid, yMid);
+			parent.text("Manager: " + trainer + "\n\nWorldrank: " + rang + "\n\nAge (avg.): " + age + "\n\nValue (€): " + marktwert + " Mio.", xMid, yMid);
 
 			parent.text(wm, xMid - 40, yMid * 1.5f);
 			parent.text(em, xMid + 40, yMid * 1.5f);
