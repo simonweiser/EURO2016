@@ -45,6 +45,9 @@ public class Country {
 	private int goalsForCounter, goalsAggainstCounter;
 	private Player selectedPlayer;
 
+	private float[] red = { 255f, 99f, 71f };
+	private float[] green = { 60f, 179f, 113f };
+
 	public Country(PApplet parent, float FLAG_SIZE, String name, PVector flag_position, PImage flag_img,
 			PImage hover_img, PImage team_logo, boolean mouseOver, Table h2hData, Table countryInfo, Table players) {
 		this.parent = parent;
@@ -101,6 +104,7 @@ public class Country {
 					teamImg);
 
 			playerList.add(p);
+
 		}
 
 		goalsForCounter = 0;
@@ -108,6 +112,7 @@ public class Country {
 
 		ballPosX = parent.width / 2 - 10;
 		ballPosY = parent.height / 2 - 10;
+
 	}
 
 	public PApplet getParent() {
@@ -291,25 +296,6 @@ public class Country {
 			}
 		}
 
-		float red = 0f;
-		float green = 0f;
-		float blue = 0f;
-
-		// COLOR
-		if (won > lost) {
-			red = 0f;
-			green = 255f;
-			blue = 0f;
-		} else if (won < lost) {
-			red = 255f;
-			green = 0f;
-			blue = 0f;
-		} else {
-			red = 0f;
-			green = 0f;
-			blue = 0f;
-		}
-
 		float x1 = flag_position.x;
 		float y1 = flag_position.y;
 		float x2 = centerFlagPosition.x + centerFlagSize / 2;
@@ -336,7 +322,23 @@ public class Country {
 			}
 
 			parent.strokeWeight(parent.height / sw);
-			parent.stroke(red, green, blue);
+
+			float[] color = new float[3];
+			if (won > lost) {
+				color[0] = green[0];
+				color[1] = green[1];
+				color[2] = green[2];
+			} else if (won < lost) {
+				color[0] = red[0];
+				color[1] = red[1];
+				color[2] = red[2];
+			} else {
+				color[0] = 255f;
+				color[1] = 255f;
+				color[2] = 255f;
+			}
+
+			parent.stroke(color[0], color[1], color[2]);
 			parent.line(x1, y1, x2, y2);
 		}
 
@@ -383,12 +385,12 @@ public class Country {
 			parent.noFill();
 			float sw = PApplet.map(won, 0, played, 0, 20);
 			parent.strokeWeight(sw);
-			parent.stroke(0, 255, 0);
+			parent.stroke(green[0], green[1], green[2]);
 			parent.bezier(x1, y1, x1, 0, x2, 0, x2, y2);
 
 			// win text
 			parent.textSize(fs24);
-			parent.fill(0, 255, 0);
+			parent.fill(green[0], green[1], green[2]);
 			parent.textAlign(PApplet.CENTER);
 			float t = 0.5f;
 			float xBezierWin = parent.bezierPoint(x1, x1, x2, x2, t);
@@ -401,12 +403,12 @@ public class Country {
 			parent.noFill();
 			float sw = PApplet.map(draw, 0, played, 0, 20);
 			parent.strokeWeight(sw);
-			parent.stroke(0, 0, 0);
+			parent.stroke(255, 255, 255);
 			parent.line(x1, y1, x2, y2);
 
 			// draw text
 			parent.textSize(fs24);
-			parent.fill(0);
+			parent.fill(255);
 			float xDraw = ((parent.width / 2) - ((x2 - x1) / 2));
 			float yDraw = ((parent.height / 2) - ((y1 - y2) / 2)) - (TARGET_FLAG_SIZE_CENTER * 0.75f);
 
@@ -419,12 +421,12 @@ public class Country {
 			float sw = PApplet.map(lost, 0, played, 0, 20);
 			parent.strokeWeight(sw);
 			parent.strokeWeight(sw);
-			parent.stroke(255, 0, 0);
+			parent.stroke(red[0], red[1], red[2]);
 			parent.bezier(x1, y1, x1, parent.height, x2, parent.height, x2, y2);
 
 			// lost text
 			parent.textSize(fs24);
-			parent.fill(255, 0, 0);
+			parent.fill(red[0], red[1], red[2]);
 			parent.textAlign(PApplet.CENTER);
 			float t = 0.5f;
 			float xBezierLost = parent.bezierPoint(x1, x1, x2, x2, t);
@@ -455,14 +457,14 @@ public class Country {
 		// goalsFor text
 		parent.textAlign(PApplet.CENTER);
 		parent.textSize(fs24);
-		parent.fill(0, 255, 0);
+		parent.fill(green[0], green[1], green[2]);
 		parent.text("goals for\n" + selectedCountry.getName() + "\n\n" + goalsForCounter, chartXpos,
 				parent.height * 0.25f);
 
 		// goalsAggainst text
 		parent.textAlign(PApplet.CENTER);
 		parent.textSize(fs24);
-		parent.fill(255, 0, 0);
+		parent.fill(red[0], red[1], red[2]);
 		parent.text(goalsAggainstCounter + "\n\ngoals for\n" + name, chartXpos, parent.height * 0.75f);
 
 		// anim goals for
@@ -521,17 +523,17 @@ public class Country {
 		// goalsFor
 		case 1:
 			parent.noStroke();
-			parent.fill(0, 255, 0);
+			parent.fill(green[0], green[1], green[2]);
 			parent.arc(chartXpos, parent.height / 2, chartSize, chartSize, start1, stop1, PApplet.PIE);
 			break;
 
 		// goalsFor and goalsAggainst
 		case 2:
 			parent.noStroke();
-			parent.fill(0, 255, 0);
+			parent.fill(green[0], green[1], green[2]);
 			parent.arc(chartXpos, parent.height / 2, chartSize, chartSize, start1, stop1, PApplet.PIE);
 			parent.noStroke();
-			parent.fill(255, 0, 0);
+			parent.fill(red[0], red[1], red[2]);
 			parent.arc(chartXpos, parent.height / 2, chartSize, chartSize, start2, stop2, PApplet.PIE);
 			break;
 
@@ -618,7 +620,7 @@ public class Country {
 				float j = 0;
 
 				parent.strokeWeight(5);
-				parent.stroke(0, 200, 0);
+				parent.stroke(green[0], green[1], green[2]);
 				parent.noFill();
 				parent.ellipse(parent.width / 2, parent.height / 2, ellipseSize, ellipseSize);
 
@@ -629,14 +631,14 @@ public class Country {
 							+ r * PApplet.sin(PApplet.radians((float) (j * (360f / (float) playerList.size()))));
 
 					if (otherPlayer.equals(selectedPlayer)) {
-						parent.fill(0, 200, 0);
+						parent.fill(green[0], green[1], green[2]);
 						parent.ellipse(targetX1, targetY1, pWidth * 1.5f + 10f, pHeight * 1.5f + 10f);
 						parent.image(otherPlayer.getPlayerImg(), targetX1 - (pWidth * 1.5f) / 2.0f,
 								targetY1 - (pHeight * 1.5f) / 2.0f, pWidth * 1.5f, pHeight * 1.5f);
 					}
 
 					else if (selectedPlayer.getTeamName().equals(otherPlayer.getTeamName())) {
-						parent.fill(0, 200, 0);
+						parent.fill(green[0], green[1], green[2]);
 						parent.ellipse(targetX1, targetY1, pWidth + 10f, pHeight + 10f);
 						parent.image(otherPlayer.getPlayerImg(), targetX1 - pWidth / 2.0f, targetY1 - pHeight / 2.0f,
 								pWidth, pHeight);
