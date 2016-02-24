@@ -124,18 +124,35 @@ public class Sketch extends PApplet {
 
 	public void mouseClicked() {
 		if (mouseButton == LEFT && selectedCountry != null) {
-			countrySorted = sortCountriesByPlayed();
-			drawSceneNum = 2;
-			if (selectedCountryDetail != null) {
-				for (Country country : countries) {
-					country.setGoalsForCounter(0);
-					country.setGoalsAggainstCounter(0);
+			switch (drawSceneNum) {
+			case 1:
+				countrySorted = sortCountriesByPlayed();
+				drawSceneNum = 2;
+				break;
+
+			case 2:
+				if (selectedCountryDetail != null) {
+					selectedCountryDetail.setGoalsForCounter(0);
+					selectedCountryDetail.setGoalsAggainstCounter(0);
+					currentFrameCount = frameCount;
+					drawSceneNum = 3;
 				}
-				currentFrameCount = frameCount;
-				drawSceneNum = 3;
-			}
-			if (selectedCountry.isMouseOverCenter()) {
-				drawSceneNum = 4;
+				if (selectedCountry.isMouseOverCenter()) {
+					drawSceneNum = 4;
+				}
+				break;
+
+			case 3:
+				// no click interaction
+				break;
+
+			case 4:
+				// no click interaction
+				break;
+
+			default:
+				println("ERROR: MOUSECLICKED");
+				break;
 			}
 
 		} else {
@@ -209,7 +226,9 @@ public class Sketch extends PApplet {
 			selectedCountryDetail = null;
 		}
 
-		if (overCountry(selectedCountry.getFlag_position().x + selectedCountry.getFLAG_SIZE() / 2, selectedCountry.getFlag_position().y + selectedCountry.getFLAG_SIZE() / 2, selectedCountry.getFLAG_SIZE())) {
+		if (overCountry(selectedCountry.getFlag_position().x + selectedCountry.getFLAG_SIZE() / 2,
+				selectedCountry.getFlag_position().y + selectedCountry.getFLAG_SIZE() / 2,
+				selectedCountry.getFLAG_SIZE())) {
 			selectedCountry.setMouseOverCenter(true);
 		} else {
 			selectedCountry.setMouseOverCenter(false);
@@ -282,7 +301,8 @@ public class Sketch extends PApplet {
 		Table h2hData = loadTable("res/data/h2h_alltime/h2h_" + name.toLowerCase() + "_alltime.csv", "header");
 		Table countryInfo = loadTable("res/data/team_info/team_info_" + name.toLowerCase() + ".csv", "header");
 		Table players = loadTable("res/data/players/playersCSV/players_" + name.toLowerCase() + ".csv", "header");
-		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, team_logo, false, h2hData, countryInfo, players);
+		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, team_logo, false, h2hData,
+				countryInfo, players);
 		countries.add(country);
 	}
 
