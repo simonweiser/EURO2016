@@ -567,7 +567,7 @@ public class Country {
 
 		// Mitte
 		float ds = TEAM_INFO_ELLIPSE_SIZE - FLAG_SIZE;
-		FLAG_SIZE += ds * SPEED;
+		FLAG_SIZE += ds * SPEED * 5f;
 
 		parent.fill(255);
 		parent.noStroke();
@@ -582,7 +582,7 @@ public class Country {
 			parent.image(team_logo, xMid - 50, (yMid / 2.7f) - ds);
 		}
 
-		if (ds < 0.6) {
+		if (ds < 0.75) {
 
 			if (selectedPlayer != null) {
 
