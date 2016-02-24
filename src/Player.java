@@ -15,9 +15,6 @@ public class Player {
 	private PImage playerImg;
 	private PImage teamImg;
 
-	private PImage hover_img;
-	boolean mouseOverPlayer = false;
-
 	public Player(PApplet parent, String playerName, String birthday, String teamName, String position, String value,
 			int number, PImage playerImg, PImage teamImg) {
 		this.parent = parent;
@@ -42,9 +39,6 @@ public class Player {
 		pgraph.ellipse(pgraph.width / 2, pgraph.height / 2, this.playerImg.width, this.playerImg.height);
 		pgraph.endDraw();
 		this.playerImg.mask(pgraph);
-
-		this.hover_img = getPlayerImg().copy();
-		this.hover_img.filter(PApplet.DILATE);
 
 	}
 
@@ -110,22 +104,6 @@ public class Player {
 
 	public void setTeamImg(PImage teamImg) {
 		this.teamImg = teamImg;
-	}
-
-	public PImage getHover_img() {
-		return hover_img;
-	}
-
-	public void setHover_img(PImage hover_img) {
-		this.hover_img = hover_img;
-	}
-
-	public boolean isMouseOverPlayer() {
-		return mouseOverPlayer;
-	}
-
-	public void setMouseOverPlayer(boolean mouseOverPlayer) {
-		this.mouseOverPlayer = mouseOverPlayer;
 	}
 
 }
