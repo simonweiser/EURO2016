@@ -41,6 +41,7 @@ public class Country {
 	float ballPosY;
 
 	private int goalsForCounter, goalsAggainstCounter;
+	private Player selectedPlayer;
 
 	public Country(PApplet parent, float FLAG_SIZE, String name, PVector flag_position, PImage flag_img, PImage hover_img, PImage team_logo, boolean mouseOver, Table h2hData, Table countryInfo, Table players) {
 		this.parent = parent;
@@ -91,7 +92,7 @@ public class Country {
 			PImage playerImg = parent.loadImage("res/data/players/images/player_" + playerName + "_pic.png");
 			PImage teamImg = parent.loadImage("res/data/players/images/player_" + playerName + "_team.png");
 
-			Player p = new Player(playerName, birthday, teamName, position, value, number, playerImg, teamImg);
+			Player p = new Player(this.parent, playerName, birthday, teamName, position, value, number, playerImg, teamImg);
 
 			playerList.add(p);
 		}
@@ -558,39 +559,57 @@ public class Country {
 
 		parent.image(field, xMid - FLAG_SIZE / 2, yMid - FLAG_SIZE / 2, FLAG_SIZE, FLAG_SIZE);
 
-		// img-size: 100x130
-		parent.image(team_logo, xMid - 50, (yMid / 2.7f) - ds);
+		if (selectedPlayer != null) {
+			parent.image(selectedPlayer.getTeamImg(), xMid - selectedPlayer.getTeamImg().width / 2, (yMid / 2.7f) - ds);
+		} else {
+			// img-size: 100x130
+			parent.image(team_logo, xMid - 50, (yMid / 2.7f) - ds);
+		}
 
 		if (ds < 0.6) {
 
-			parent.textAlign(PApplet.CENTER);
-			parent.textSize(fs32);
-			parent.fill(0);
+			if (selectedPlayer != null) {
 
-			parent.text(name, xMid, yMid / 1.3f);
+				parent.textAlign(PApplet.CENTER);
+				parent.textSize(fs32);
+				parent.fill(0);
+				parent.text(selectedPlayer.getPlayerName(), xMid, yMid / 1.3f);
+				parent.textSize(fs24);
+				parent.text(selectedPlayer.getTeamName() + "\n\n" + selectedPlayer.getBirthday() + "\n\n" + selectedPlayer.getPosition() + "\n\n" + selectedPlayer.getValue() + "\n\n#" + selectedPlayer.getNumber(), xMid, yMid);
 
-			String trainer = countryInfo.getString(0, "trainer");
-			String rang = countryInfo.getString(0, "rang");
-			String age = countryInfo.getString(0, "age");
-			String marktwert = countryInfo.getString(0, "marktwert");
-			String wm = countryInfo.getString(0, "wm");
-			String em = countryInfo.getString(0, "em");
+			} else {
 
-			parent.textSize(fs24);
-			parent.text("Manager: " + trainer + "\n\nFIFA-Rank: " + rang + "\n\nAge (ø): " + age + "\n\nValue (€): " + marktwert + " Mio.", xMid, yMid);
+				parent.textAlign(PApplet.CENTER);
+				parent.textSize(fs32);
+				parent.fill(0);
+				parent.text(name, xMid, yMid / 1.3f);
 
-			parent.text(wm, xMid - 40, yMid * 1.5f);
-			parent.text(em, xMid + 75, yMid * 1.5f);
+				String trainer = countryInfo.getString(0, "trainer");
+				String rang = countryInfo.getString(0, "rang");
+				String age = countryInfo.getString(0, "age");
+				String marktwert = countryInfo.getString(0, "marktwert");
+				String wm = countryInfo.getString(0, "wm");
+				String em = countryInfo.getString(0, "em");
 
-			parent.image(wmCupIcon, xMid - 100, yMid * 1.4f);
-			parent.image(emCupIcon, xMid + 10, yMid * 1.4f);
+				parent.textSize(fs24);
+				parent.text("Manager: " + trainer + "\n\nFIFA-Rank: " + rang + "\n\nAge (ø): " + age + "\n\nValue (€): " + marktwert + " Mio.", xMid, yMid);
+
+				parent.text(wm, xMid - 40, yMid * 1.5f);
+				parent.text(em, xMid + 75, yMid * 1.5f);
+
+				parent.image(wmCupIcon, xMid - 100, yMid * 1.4f);
+				parent.image(emCupIcon, xMid + 10, yMid * 1.4f);
+			}
 		}
 
 		float r = TEAM_INFO_ELLIPSE_SIZE / 2.0f;
 
 		float i = 0;
-
+		boolean showPlayerDetail = false;
 		for (Player player : playerList) {
+
+			float pWidth = parent.height / 16;
+			float pHeight = parent.height / 12;
 
 			float targetX = xMid + r * PApplet.cos(PApplet.radians((float) (i * (360f / (float) playerList.size()))));
 			// float dx = targetX - flag_position.x;
@@ -600,10 +619,37 @@ public class Country {
 			// float dy = targetY - flag_position.y;
 			// flag_position.y += dy * SPEED;
 
-			parent.image(player.getPlayerImg(), targetX - 58 / 2, targetY - 76 / 2, 58, 76);
+			parent.image(player.getPlayerImg(), targetX - pWidth / 2, targetY - pHeight / 2, pWidth, pHeight);
+
+			if (overPlayer(targetX, targetY, pWidth)) {
+				player.setMouseOverPlayer(true);
+				showPlayerDetail = true;
+				selectedPlayer = player;
+			} else {
+				player.setMouseOverPlayer(false);
+			}
+
+			if (player.isMouseOverPlayer()) {
+				parent.image(player.getHover_img(), targetX - pWidth / 2, targetY - pHeight / 2, pWidth, pHeight);
+			}
 
 			i++;
 		}
 
+		if (showPlayerDetail == false) {
+			selectedPlayer = null;
+		}
+
 	}
+
+	private boolean overPlayer(float x, float y, float diameter) {
+		float disX = x - parent.mouseX;
+		float disY = y - parent.mouseY;
+		if (PApplet.sqrt(PApplet.sq(disX) + PApplet.sq(disY)) < diameter / 2) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 }

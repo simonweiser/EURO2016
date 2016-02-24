@@ -162,6 +162,9 @@ public class Sketch extends PApplet {
 		}
 	}
 
+	/**
+	 * Karte
+	 */
 	private void updateScene1(int x, int y) {
 		boolean isMouseOverCountry = false;
 
@@ -182,6 +185,9 @@ public class Sketch extends PApplet {
 
 	}
 
+	/**
+	 * Head2Head
+	 */
 	private void updateScene2(int mouseX, int mouseY) {
 		image(background, 0, 0);
 		// image(logo, 10, height - 160, 110, 146);
@@ -218,6 +224,9 @@ public class Sketch extends PApplet {
 		selectedCountry.displayDetailCenter();
 	}
 
+	/**
+	 * VS
+	 */
 	private void updateScene3(int mouseX, int mouseY) {
 		image(background, 0, 0);
 		// image(logo, 10, height - 160, 110, 146);
@@ -226,6 +235,9 @@ public class Sketch extends PApplet {
 		selectedCountry.displayDetailCenter();
 	}
 
+	/**
+	 * Team Info
+	 */
 	private void updateScene4(int mouseX, int mouseY) {
 		// background(200);
 		image(background, 0, 0);
@@ -243,7 +255,7 @@ public class Sketch extends PApplet {
 			return false;
 		}
 	}
-
+	
 	private void createCountries() {
 		countries = new ArrayList<Country>();
 
@@ -272,13 +284,13 @@ public class Sketch extends PApplet {
 		createCountryAndAddtoList("Ukraine", 49.789843f, 31.195906f);
 		createCountryAndAddtoList("Wales", 52.144527f, -3.981143f);
 	}
-
+	
 	private void createCountryAndAddtoList(String name, float flag_position_x, float flag_position_y) {
 		PVector screenLoc = mercatorMap.getScreenLocation(new PVector(flag_position_x, flag_position_y));
 		PImage flag_img = loadImage("res/img/nationalflaggen/" + name.toLowerCase() + ".png");
 		PImage hover_img = loadImage("res/img/nationalflaggen/" + name.toLowerCase() + ".png");
-		PImage team_logo = loadImage("res/img/teamlogos/" + name.toLowerCase() + ".png");
 		hover_img.filter(POSTERIZE, 2);
+		PImage team_logo = loadImage("res/img/teamlogos/" + name.toLowerCase() + ".png");
 		Table h2hData = loadTable("res/data/h2h_alltime/h2h_" + name.toLowerCase() + "_alltime.csv", "header");
 		Table countryInfo = loadTable("res/data/team_info/team_info_" + name.toLowerCase() + ".csv", "header");
 		Table players = loadTable("res/data/players/playersCSV/players_" + name.toLowerCase() + ".csv", "header");

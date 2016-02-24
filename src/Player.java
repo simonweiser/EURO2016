@@ -1,7 +1,11 @@
+import processing.core.PApplet;
+import processing.core.PGraphics;
 import processing.core.PImage;
 
 public class Player {
 
+	private PApplet parent;
+	
 	private String playerName;
 	private String birthday;
 	private String teamName;
@@ -11,7 +15,11 @@ public class Player {
 	private PImage playerImg;
 	private PImage teamImg;
 
-	public Player(String playerName, String birthday, String teamName, String position, String value, int number, PImage playerImg, PImage teamImg) {
+	private PImage hover_img;
+	boolean mouseOverPlayer = false;
+
+	public Player(PApplet parent, String playerName, String birthday, String teamName, String position, String value, int number, PImage playerImg, PImage teamImg) {
+		this.parent = parent;
 		this.playerName = playerName;
 		this.birthday = birthday;
 		this.teamName = teamName;
@@ -20,6 +28,21 @@ public class Player {
 		this.number = number;
 		this.playerImg = playerImg;
 		this.teamImg = teamImg;
+
+		PGraphics pgraph = this.parent.createGraphics(this.playerImg.width, this.playerImg.height);
+		pgraph.beginDraw();
+		pgraph.background(0);
+		pgraph.fill(255);
+		pgraph.noStroke();
+		pgraph.smooth();
+		pgraph.ellipseMode(PApplet.CENTER);
+		pgraph.ellipse(pgraph.width / 2, pgraph.height / 2, this.playerImg.width, this.playerImg.height);
+		pgraph.endDraw();
+		this.playerImg.mask(pgraph);
+
+		this.hover_img = getPlayerImg().copy();
+		this.hover_img.filter(PApplet.DILATE);
+
 	}
 
 	public String getPlayerName() {
@@ -84,6 +107,22 @@ public class Player {
 
 	public void setTeamImg(PImage teamImg) {
 		this.teamImg = teamImg;
+	}
+
+	public PImage getHover_img() {
+		return hover_img;
+	}
+
+	public void setHover_img(PImage hover_img) {
+		this.hover_img = hover_img;
+	}
+
+	public boolean isMouseOverPlayer() {
+		return mouseOverPlayer;
+	}
+
+	public void setMouseOverPlayer(boolean mouseOverPlayer) {
+		this.mouseOverPlayer = mouseOverPlayer;
 	}
 
 }
