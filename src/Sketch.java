@@ -124,18 +124,35 @@ public class Sketch extends PApplet {
 
 	public void mouseClicked() {
 		if (mouseButton == LEFT && selectedCountry != null) {
-			countrySorted = sortCountriesByPlayed();
-			drawSceneNum = 2;
-			if (selectedCountryDetail != null) {
-				for (Country country : countries) {
-					country.setGoalsForCounter(0);
-					country.setGoalsAggainstCounter(0);
+			switch (drawSceneNum) {
+			case 1:
+				countrySorted = sortCountriesByPlayed();
+				drawSceneNum = 2;
+				break;
+
+			case 2:
+				if (selectedCountryDetail != null) {
+					selectedCountryDetail.setGoalsForCounter(0);
+					selectedCountryDetail.setGoalsAggainstCounter(0);
+					currentFrameCount = frameCount;
+					drawSceneNum = 3;
 				}
-				currentFrameCount = frameCount;
-				drawSceneNum = 3;
-			}
-			if (selectedCountry.isMouseOverCenter()) {
-				drawSceneNum = 4;
+				if (selectedCountry.isMouseOverCenter()) {
+					drawSceneNum = 4;
+				}
+				break;
+
+			case 3:
+				// no click interaction
+				break;
+
+			case 4:
+				// no click interaction
+				break;
+
+			default:
+				println("ERROR: MOUSECLICKED");
+				break;
 			}
 
 		} else {
@@ -255,7 +272,7 @@ public class Sketch extends PApplet {
 			return false;
 		}
 	}
-	
+
 	private void createCountries() {
 		countries = new ArrayList<Country>();
 
@@ -284,7 +301,7 @@ public class Sketch extends PApplet {
 		createCountryAndAddtoList("Ukraine", 49.789843f, 31.195906f);
 		createCountryAndAddtoList("Wales", 52.144527f, -3.981143f);
 	}
-	
+
 	private void createCountryAndAddtoList(String name, float flag_position_x, float flag_position_y) {
 		PVector screenLoc = mercatorMap.getScreenLocation(new PVector(flag_position_x, flag_position_y));
 		PImage flag_img = loadImage("res/img/nationalflaggen/" + name.toLowerCase() + ".png");

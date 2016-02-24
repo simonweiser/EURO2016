@@ -5,7 +5,7 @@ import processing.core.PImage;
 public class Player {
 
 	private PApplet parent;
-	
+
 	private String playerName;
 	private String birthday;
 	private String teamName;
