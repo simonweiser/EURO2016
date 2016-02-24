@@ -45,8 +45,11 @@ public class Country {
 	private int goalsForCounter, goalsAggainstCounter;
 	private Player selectedPlayer;
 	private String group;
+	private float[] red = { 255f, 99f, 71f };
+	private float[] green = { 60f, 179f, 113f };
 
 	public Country(PApplet parent, float FLAG_SIZE, String name, PVector flag_position, PImage flag_img, PImage hover_img, PImage team_logo, boolean mouseOver, Table h2hData, Table countryInfo, Table players, String group) {
+
 		this.parent = parent;
 		this.FLAG_SIZE = FLAG_SIZE;
 		this.name = name;
@@ -101,6 +104,7 @@ public class Country {
 			Player p = new Player(this.parent, playerName, birthday, teamName, position, value, number, playerImg, teamImg);
 
 			playerList.add(p);
+
 		}
 
 		goalsForCounter = 0;
@@ -108,6 +112,7 @@ public class Country {
 
 		ballPosX = parent.width / 2 - 10;
 		ballPosY = parent.height / 2 - 10;
+
 	}
 
 	public PApplet getParent() {
@@ -297,25 +302,6 @@ public class Country {
 			}
 		}
 
-		float red = 0f;
-		float green = 0f;
-		float blue = 0f;
-
-		// COLOR
-		if (won > lost) {
-			red = 0f;
-			green = 255f;
-			blue = 0f;
-		} else if (won < lost) {
-			red = 255f;
-			green = 0f;
-			blue = 0f;
-		} else {
-			red = 0f;
-			green = 0f;
-			blue = 0f;
-		}
-
 		float x1 = flag_position.x;
 		float y1 = flag_position.y;
 		float x2 = centerFlagPosition.x + centerFlagSize / 2;
@@ -342,7 +328,23 @@ public class Country {
 			}
 
 			parent.strokeWeight(parent.height / sw);
-			parent.stroke(red, green, blue);
+
+			float[] color = new float[3];
+			if (won > lost) {
+				color[0] = green[0];
+				color[1] = green[1];
+				color[2] = green[2];
+			} else if (won < lost) {
+				color[0] = red[0];
+				color[1] = red[1];
+				color[2] = red[2];
+			} else {
+				color[0] = 255f;
+				color[1] = 255f;
+				color[2] = 255f;
+			}
+
+			parent.stroke(color[0], color[1], color[2]);
 			parent.line(x1, y1, x2, y2);
 		}
 
@@ -385,12 +387,12 @@ public class Country {
 			parent.noFill();
 			float sw = PApplet.map(won, 0, played, 0, 20);
 			parent.strokeWeight(sw);
-			parent.stroke(0, 255, 0);
+			parent.stroke(green[0], green[1], green[2]);
 			parent.bezier(x1, y1, x1, 0, x2, 0, x2, y2);
 
 			// win text
 			parent.textSize(fs24);
-			parent.fill(0, 255, 0);
+			parent.fill(green[0], green[1], green[2]);
 			parent.textAlign(PApplet.CENTER);
 			float t = 0.5f;
 			float xBezierWin = parent.bezierPoint(x1, x1, x2, x2, t);
@@ -403,12 +405,12 @@ public class Country {
 			parent.noFill();
 			float sw = PApplet.map(draw, 0, played, 0, 20);
 			parent.strokeWeight(sw);
-			parent.stroke(0, 0, 0);
+			parent.stroke(255, 255, 255);
 			parent.line(x1, y1, x2, y2);
 
 			// draw text
 			parent.textSize(fs24);
-			parent.fill(0);
+			parent.fill(255);
 			float xDraw = ((parent.width / 2) - ((x2 - x1) / 2));
 			float yDraw = ((parent.height / 2) - ((y1 - y2) / 2)) - (TARGET_FLAG_SIZE_CENTER * 0.75f);
 
@@ -421,12 +423,12 @@ public class Country {
 			float sw = PApplet.map(lost, 0, played, 0, 20);
 			parent.strokeWeight(sw);
 			parent.strokeWeight(sw);
-			parent.stroke(255, 0, 0);
+			parent.stroke(red[0], red[1], red[2]);
 			parent.bezier(x1, y1, x1, parent.height, x2, parent.height, x2, y2);
 
 			// lost text
 			parent.textSize(fs24);
-			parent.fill(255, 0, 0);
+			parent.fill(red[0], red[1], red[2]);
 			parent.textAlign(PApplet.CENTER);
 			float t = 0.5f;
 			float xBezierLost = parent.bezierPoint(x1, x1, x2, x2, t);
@@ -457,13 +459,14 @@ public class Country {
 		// goalsFor text
 		parent.textAlign(PApplet.CENTER);
 		parent.textSize(fs24);
-		parent.fill(0, 255, 0);
+
+		parent.fill(green[0], green[1], green[2]);
 		parent.text("goals for\n" + selectedCountry.getName() + "\n\n" + goalsForCounter, chartXpos, parent.height * 0.25f);
 
 		// goalsAggainst text
 		parent.textAlign(PApplet.CENTER);
 		parent.textSize(fs24);
-		parent.fill(255, 0, 0);
+		parent.fill(red[0], red[1], red[2]);
 		parent.text(goalsAggainstCounter + "\n\ngoals for\n" + name, chartXpos, parent.height * 0.75f);
 
 		// anim goals for
@@ -522,17 +525,17 @@ public class Country {
 		// goalsFor
 		case 1:
 			parent.noStroke();
-			parent.fill(0, 255, 0);
+			parent.fill(green[0], green[1], green[2]);
 			parent.arc(chartXpos, parent.height / 2, chartSize, chartSize, start1, stop1, PApplet.PIE);
 			break;
 
 		// goalsFor and goalsAggainst
 		case 2:
 			parent.noStroke();
-			parent.fill(0, 255, 0);
+			parent.fill(green[0], green[1], green[2]);
 			parent.arc(chartXpos, parent.height / 2, chartSize, chartSize, start1, stop1, PApplet.PIE);
 			parent.noStroke();
-			parent.fill(255, 0, 0);
+			parent.fill(red[0], red[1], red[2]);
 			parent.arc(chartXpos, parent.height / 2, chartSize, chartSize, start2, stop2, PApplet.PIE);
 			break;
 
@@ -586,7 +589,7 @@ public class Country {
 
 		parent.fill(255);
 		parent.noStroke();
-		parent.ellipse(xMid, yMid, FLAG_SIZE - 1, FLAG_SIZE - 1);
+		parent.ellipse(xMid, yMid, FLAG_SIZE, FLAG_SIZE);
 
 		parent.image(field, xMid - FLAG_SIZE / 2, yMid - FLAG_SIZE / 2, FLAG_SIZE, FLAG_SIZE);
 
@@ -594,10 +597,12 @@ public class Country {
 			parent.image(selectedPlayer.getTeamImg(), xMid - selectedPlayer.getTeamImg().width / 2, (yMid / 2.7f) - ds);
 		} else {
 			// img-size: 100x130
-			parent.image(team_logo, xMid - 50, (yMid / 2.7f) - ds);
+			parent.image(team_logo, xMid - team_logo.width / 2, (yMid / 2.7f) - ds);
 		}
 
 		if (ds < 0.75) {
+
+			float r = (TEAM_INFO_ELLIPSE_SIZE / 2.0f) + (float) playerList.getFirst().getPlayerImg().height / 2 + 10f;
 
 			if (selectedPlayer != null) {
 
@@ -607,6 +612,43 @@ public class Country {
 				parent.text(selectedPlayer.getPlayerName(), xMid, yMid / 1.3f);
 				parent.textSize(fs24);
 				parent.text(selectedPlayer.getTeamName() + "\n\n" + selectedPlayer.getBirthday() + "\n\n" + selectedPlayer.getPosition() + "\n\n" + selectedPlayer.getValue() + "\n\n#" + selectedPlayer.getNumber(), xMid, yMid);
+
+				float pWidth = parent.height / 16f;
+				float pHeight = parent.height / 12f;
+
+				boolean showPlayerDetail = false;
+				float j = 0;
+
+				parent.strokeWeight(5);
+				parent.stroke(green[0], green[1], green[2]);
+				parent.noFill();
+				parent.ellipse(parent.width / 2, parent.height / 2, ellipseSize, ellipseSize);
+
+				for (Player otherPlayer : playerList) {
+					float targetX1 = xMid + r * PApplet.cos(PApplet.radians((float) (j * (360f / (float) playerList.size()))));
+					float targetY1 = yMid + r * PApplet.sin(PApplet.radians((float) (j * (360f / (float) playerList.size()))));
+
+					if (otherPlayer.equals(selectedPlayer)) {
+						parent.fill(green[0], green[1], green[2]);
+						parent.ellipse(targetX1, targetY1, pWidth * 1.5f + 10f, pHeight * 1.5f + 10f);
+						parent.image(otherPlayer.getPlayerImg(), targetX1 - (pWidth * 1.5f) / 2.0f, targetY1 - (pHeight * 1.5f) / 2.0f, pWidth * 1.5f, pHeight * 1.5f);
+					}
+
+					else if (selectedPlayer.getTeamName().equals(otherPlayer.getTeamName())) {
+						parent.fill(green[0], green[1], green[2]);
+						parent.ellipse(targetX1, targetY1, pWidth + 10f, pHeight + 10f);
+						parent.image(otherPlayer.getPlayerImg(), targetX1 - pWidth / 2.0f, targetY1 - pHeight / 2.0f, pWidth, pHeight);
+					}
+
+					if (overPlayer(targetX1, targetY1, pWidth)) {
+						showPlayerDetail = true;
+					}
+					j++;
+				}
+
+				if (showPlayerDetail == false) {
+					selectedPlayer = null;
+				}
 
 			} else {
 
@@ -630,47 +672,29 @@ public class Country {
 
 				parent.image(wmCupIcon, xMid - 100, yMid * 1.4f);
 				parent.image(emCupIcon, xMid + 10, yMid * 1.4f);
+
+				float i = 0;
+
+				for (Player player : playerList) {
+
+					float pWidth = parent.height / 16f;
+					float pHeight = parent.height / 12f;
+
+					float targetX = xMid + r * PApplet.cos(PApplet.radians((float) (i * (360f / (float) playerList.size()))));
+					float targetY = yMid + r * PApplet.sin(PApplet.radians((float) (i * (360f / (float) playerList.size()))));
+
+					parent.fill(255);
+					parent.ellipse(targetX, targetY, pWidth + 10f, pHeight + 10f);
+					parent.image(player.getPlayerImg(), targetX - pWidth / 2.0f, targetY - pHeight / 2.0f, pWidth, pHeight);
+
+					if (overPlayer(targetX, targetY, pHeight)) {
+						selectedPlayer = player;
+					}
+
+					i++;
+				}
+
 			}
-		}
-
-		float i = 0;
-		float r = (TEAM_INFO_ELLIPSE_SIZE / 2.0f) + (float) playerList.getFirst().getPlayerImg().height / 2;
-		boolean showPlayerDetail = false;
-
-		for (Player player : playerList) {
-
-			float pWidth = parent.height / 16f;
-			float pHeight = parent.height / 12f;
-
-			float targetX = xMid + r * PApplet.cos(PApplet.radians((float) (i * (360f / (float) playerList.size()))));
-			// float dx = targetX - flag_position.x;
-			// flag_position.x += dx * SPEED;
-
-			float targetY = yMid + r * PApplet.sin(PApplet.radians((float) (i * (360f / (float) playerList.size()))));
-			// float dy = targetY - flag_position.y;
-			// flag_position.y += dy * SPEED;
-
-			parent.fill(255);
-			parent.ellipse(targetX, targetY, pWidth + 5f, pHeight + 5f);
-			parent.image(player.getPlayerImg(), targetX - pWidth / 2.0f, targetY - pHeight / 2.0f, pWidth, pHeight);
-
-			if (overPlayer(targetX, targetY, pWidth)) {
-				player.setMouseOverPlayer(true);
-				showPlayerDetail = true;
-				selectedPlayer = player;
-			} else {
-				player.setMouseOverPlayer(false);
-			}
-
-			if (player.isMouseOverPlayer()) {
-				parent.image(player.getHover_img(), targetX - pWidth / 2, targetY - pHeight / 2, pWidth, pHeight);
-			}
-
-			i++;
-		}
-
-		if (showPlayerDetail == false) {
-			selectedPlayer = null;
 		}
 
 	}
