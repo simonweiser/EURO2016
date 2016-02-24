@@ -232,7 +232,9 @@ public class Sketch extends PApplet {
 			selectedCountryDetail = null;
 		}
 
-		if (overCountry(selectedCountry.getFlag_position().x + selectedCountry.getFLAG_SIZE() / 2, selectedCountry.getFlag_position().y + selectedCountry.getFLAG_SIZE() / 2, selectedCountry.getFLAG_SIZE())) {
+		if (overCountry(selectedCountry.getFlag_position().x + selectedCountry.getFLAG_SIZE() / 2,
+				selectedCountry.getFlag_position().y + selectedCountry.getFLAG_SIZE() / 2,
+				selectedCountry.getFLAG_SIZE())) {
 			selectedCountry.setMouseOverCenter(true);
 		} else {
 			selectedCountry.setMouseOverCenter(false);
@@ -311,7 +313,8 @@ public class Sketch extends PApplet {
 		Table h2hData = loadTable("res/data/h2h_alltime/h2h_" + name.toLowerCase() + "_alltime.csv", "header");
 		Table countryInfo = loadTable("res/data/team_info/team_info_" + name.toLowerCase() + ".csv", "header");
 		Table players = loadTable("res/data/players/playersCSV/players_" + name.toLowerCase() + ".csv", "header");
-		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, team_logo, false, h2hData, countryInfo, players);
+		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, team_logo, false, h2hData,
+				countryInfo, players);
 		countries.add(country);
 	}
 

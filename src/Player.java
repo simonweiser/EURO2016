@@ -18,7 +18,8 @@ public class Player {
 	private PImage hover_img;
 	boolean mouseOverPlayer = false;
 
-	public Player(PApplet parent, String playerName, String birthday, String teamName, String position, String value, int number, PImage playerImg, PImage teamImg) {
+	public Player(PApplet parent, String playerName, String birthday, String teamName, String position, String value,
+			int number, PImage playerImg, PImage teamImg) {
 		this.parent = parent;
 		this.playerName = playerName;
 		this.birthday = birthday;
@@ -28,6 +29,8 @@ public class Player {
 		this.number = number;
 		this.playerImg = playerImg;
 		this.teamImg = teamImg;
+
+		this.playerImg.resize(58, 76);
 
 		PGraphics pgraph = this.parent.createGraphics(this.playerImg.width, this.playerImg.height);
 		pgraph.beginDraw();
