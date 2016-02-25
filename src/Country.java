@@ -656,7 +656,7 @@ public class Country {
 								pWidth, pHeight);
 					}
 
-					if (overPlayer(targetX1, targetY1, pWidth)) {
+					if (overPlayer(targetX1, targetY1, pHeight)) {
 						showPlayerDetail = true;
 					}
 					j++;
