@@ -59,16 +59,16 @@ public class Sketch extends PApplet {
 		background.resize(width, height);
 		background.filter(BLUR, 6);
 
-		drawSceneNum = 1;
+		drawSceneNum = 0;
 		selectedCountry = null;
 		selectedCountryDetail = null;
 		currentFrameCount = 0;
 
 		createCountries();
 
-		// splashMovie = new Movie(this, "res/data/splashVideo.mp4");
-		// splashMovie.play();
-		// movieDuration = splashMovie.duration() + 2f;
+		splashMovie = new Movie(this, "res/data/splashVideo.mp4");
+		splashMovie.play();
+		movieDuration = splashMovie.duration() + 0.5f;
 		startTime = System.currentTimeMillis() / 1000.0;
 
 	}
@@ -254,7 +254,7 @@ public class Sketch extends PApplet {
 			drawSceneNum = 1;
 		} else {
 			background(0);
-			image(splashMovie, 0, 0);
+			image(splashMovie, 0, height / 2 - splashMovie.height / 2);
 			// image(splashMovie, width / 2 - 400, height / 2 - 300, 800, 600);
 		}
 	}
