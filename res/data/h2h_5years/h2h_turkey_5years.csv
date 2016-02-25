@@ -1,24 +1,24 @@
 lost,opponent,won,draw,goals_aggainst,played,goals_for
-3,Albania,4,2,11,9,8
-8,Austria,6,1,17,15,20
-3,Belgium,3,5,18,11,17
-2,Croatia,0,4,8,6,4
-5,Czech Republic,3,1,20,9,11
-8,England,0,2,31,10,0
-7,France,1,2,20,10,6
+0,Albania,0,0,0,0,0
+1,Austria,1,1,2,3,2
+0,Belgium,0,1,1,1,1
+1,Croatia,0,1,3,2,0
+2,Czech Republic,1,0,4,3,3
+0,England,0,0,0,0,0
+0,France,0,0,0,0,0
 1,Germany,0,0,3,1,1
-8,Hungary,4,2,31,14,17
-5,Iceland,2,2,16,9,10
-10,Italy,0,5,26,15,8
-5,Northern Ireland,5,2,12,12,12
-11,Poland,3,3,39,17,12
-6,Portugal,2,0,16,8,8
-5,Republic of Ireland,2,6,27,13,15
-12,Romania,5,8,45,25,24
-2,Russia,0,0,2,2,0
-1,Slovakia,4,1,3,6,8
-7,Spain,1,6,21,14,9
-2,Sweden,3,4,10,9,10
-4,Switzerland,8,3,20,15,21
-1,Ukraine,4,1,5,6,9
-3,Wales,2,1,10,6,7
+1,Hungary,0,1,4,2,2
+0,Iceland,1,1,3,2,1
+0,Italy,0,0,0,0,0
+0,Northern Ireland,1,0,0,1,1
+0,Poland,0,0,0,0,0
+0,Portugal,1,0,1,1,3
+0,Republic of Ireland,1,0,1,1,2
+1,Romania,1,0,1,2,2
+0,Russia,0,0,0,0,0
+1,Slovakia,0,0,2,1,1
+0,Spain,0,0,0,0,0
+0,Sweden,1,0,1,1,2
+0,Switzerland,0,0,0,0,0
+0,Albania,1,0,0,1,2
+0,Wales,0,0,0,0,0
