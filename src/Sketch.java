@@ -10,18 +10,12 @@ import processing.data.Table;
 
 public class Sketch extends PApplet {
 
-	PImage background;
-	PImage logo;
-	PImage map;
-
-	MercatorMap mercatorMap;
+	private PImage background, logo, map, onButton, offButton;
+	private MercatorMap mercatorMap;
 	float FLAG_SIZE;
-
-	ArrayList<Country> countries, countrySorted;
-	Country selectedCountry, selectedCountryDetail;
-
-	int drawSceneNum;
-	int currentFrameCount;
+	private ArrayList<Country> countries, countrySorted;
+	private Country selectedCountry, selectedCountryDetail;
+	private int drawSceneNum, currentFrameCount;
 	private boolean groupFilterActive = false;
 
 	public void setup() {
@@ -39,6 +33,9 @@ public class Sketch extends PApplet {
 
 		logo = loadImage("res/img/em2016_logo.png");
 		image(logo, 10, height - 160, 110, 146);
+
+		onButton = loadImage("res/img/onButton.png");
+		offButton = loadImage("res/img/offButton.png");
 
 		background = loadImage("res/img/background_stadium.png");
 		background.resize(width, height);
@@ -125,7 +122,7 @@ public class Sketch extends PApplet {
 
 	public void mouseClicked() {
 
-		if (overButton(10, height - 160 - height / 45, height / 45, height / 45)) {
+		if (overButton(10, height - 160 - onButton.height, onButton.width, onButton.height)) {
 			groupFilterActive = !groupFilterActive;
 		}
 
@@ -190,14 +187,15 @@ public class Sketch extends PApplet {
 	 */
 	private void updateScene1(int x, int y) {
 		boolean isMouseOverCountry = false;
-
+		image(map, 0, 0, width, height);
+		image(logo, 10, height - 160, 110, 146);
 		if (groupFilterActive) {
-			image(map, 0, 0, width, height);
-			image(logo, 10, height - 160, 110, 146);
 
-			fill(0, 255, 0);
-			rect(10, height - 160 - height / 45, height / 45, height / 45);
+			// fill(0, 255, 0);
+//			 rect(10, height - 160 - height / 45, height / 45, height / 45);
 
+			image(onButton,10, height - 160 - onButton.height, onButton.width, onButton.height);
+			
 			for (Country country : countries) {
 				if (overCountry(country.getFlag_position().x, country.getFlag_position().y, FLAG_SIZE)) {
 					country.setMouseOver(true);
@@ -219,10 +217,11 @@ public class Sketch extends PApplet {
 				}
 			}
 		} else {
-			image(map, 0, 0, width, height);
-			image(logo, 10, height - 160, 110, 146);
-			fill(255, 0, 0);
-			rect(10, height - 160 - height / 45, height / 45, height / 45);
+
+//			fill(255, 0, 0);
+//			rect(10, height - 160 - height / 45, height / 45, height / 45);
+			image(offButton,10, height - 160 - offButton.height, offButton.width, offButton.height);
+			
 			for (Country country : countries) {
 				if (overCountry(country.getFlag_position().x, country.getFlag_position().y, FLAG_SIZE)) {
 					country.setMouseOver(true);
@@ -248,23 +247,49 @@ public class Sketch extends PApplet {
 		image(background, 0, 0);
 		// image(logo, 10, height - 160, 110, 146);
 
-		float i = 0;
 		boolean isMouseOverCountry = false;
 
-		for (Country country : countrySorted) {
+		if (groupFilterActive) {
 
-			if (!country.isMouseOver()) {
-				if (overCountry(country.getFlag_position().x, country.getFlag_position().y, FLAG_SIZE * 2)) {
-					country.setMouseOverDetail(true);
-					selectedCountryDetail = country;
-					isMouseOverCountry = true;
-				} else {
-					country.setMouseOverDetail(false);
+			float i = 0;
+
+			for (Country opponent : countrySorted) {
+
+				if (opponent.getGroup().equals(selectedCountry.getGroup())) {
+
+					if (!opponent.isMouseOver()) {
+						if (overCountry(opponent.getFlag_position().x, opponent.getFlag_position().y, FLAG_SIZE * 2)) {
+							opponent.setMouseOverDetail(true);
+							selectedCountryDetail = opponent;
+							isMouseOverCountry = true;
+						} else {
+							opponent.setMouseOverDetail(false);
+						}
+
+						opponent.displayDetailRadial(i, selectedCountry, false, 0);
+						i++;
+					}
 				}
-
-				country.displayDetailRadial(i, selectedCountry, false, 0);
-				i++;
 			}
+		} else {
+
+			float i = 0;
+			for (Country country : countrySorted) {
+
+				if (!country.isMouseOver()) {
+					if (overCountry(country.getFlag_position().x, country.getFlag_position().y, FLAG_SIZE * 2)) {
+						country.setMouseOverDetail(true);
+						selectedCountryDetail = country;
+						isMouseOverCountry = true;
+					} else {
+						country.setMouseOverDetail(false);
+					}
+
+					country.displayDetailRadial(i, selectedCountry, false, 0);
+					i++;
+				}
+			}
+
 		}
 
 		if (isMouseOverCountry == false) {
