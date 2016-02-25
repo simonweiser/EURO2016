@@ -80,7 +80,7 @@ public class Country {
 		emCupIcon.resize(50, 50);
 
 		football = parent.loadImage("res/img/football.png");
-		football.resize(20, 20);
+		football.resize((int) TARGET_FLAG_SIZE_CENTER, (int) TARGET_FLAG_SIZE_CENTER);
 
 		field = parent.loadImage("res/img/field.png");
 
@@ -469,6 +469,10 @@ public class Country {
 		parent.textAlign(PApplet.CENTER);
 		parent.textSize(fs24);
 
+		parent.fill(0);
+		parent.text("goals for\n" + selectedCountry.getName() + "\n\n" + goalsForCounter, chartXpos + 1,
+				(parent.height * 0.25f) + 1);
+
 		parent.fill(green[0], green[1], green[2]);
 		parent.text("goals for\n" + selectedCountry.getName() + "\n\n" + goalsForCounter, chartXpos,
 				parent.height * 0.25f);
@@ -476,51 +480,29 @@ public class Country {
 		// goalsAggainst text
 		parent.textAlign(PApplet.CENTER);
 		parent.textSize(fs24);
+
+		parent.fill(0);
+		parent.text(goalsAggainstCounter + "\n\ngoals for\n" + name, chartXpos + 1, (parent.height * 0.75f) + 1);
+
 		parent.fill(red[0], red[1], red[2]);
 		parent.text(goalsAggainstCounter + "\n\ngoals for\n" + name, chartXpos, parent.height * 0.75f);
 
 		// anim goals for
 		if ((parent.frameCount - currentFrameCount) > 100) {
 			if (goalsForCounter < goalsFor) {
-				// if (parent.frameCount % 10 == 0) {
 				goalsForCounter++;
-				// ballPosX = parent.width / 2 - TARGET_FLAG_SIZE_CENTER - 10;
-				// ballPosY = parent.height / 2 - 10;
-				// }
-				//
-				//
-				// float targetX = 250;
-				// float dx = targetX - ballPosX;
-				// ballPosX += dx * 0.1f;
-				//
-				// float targetY = parent.height / 2 - 50;
-				// float dy = targetY - ballPosY;
-				// ballPosY += dy * 0.1f;
-				//
-				// parent.image(football, ballPosX, ballPosY);
 				pieChart(1, goalsFor + goalsAggainst, chartSize, chartXpos);
 			} else if (goalsAggainstCounter < goalsAggainst) {
-				// anim goals aggainst
-				// if (parent.frameCount % 10 == 0) {
 				goalsAggainstCounter++;
-				// ballPosX = flag_position.x - FLAG_SIZE - 10;
-				// ballPosY = flag_position.y - 10;
-				// }
-				// float targetX = 250;
-				// float dx = targetX - ballPosX;
-				// ballPosX += dx * 0.1f;
-				//
-				// float targetY = parent.height / 2;
-				// float dy = targetY - ballPosY;
-				// ballPosY += dy * 0.1f;
-				//
-				// parent.image(football, ballPosX, ballPosY);
 				pieChart(2, goalsFor + goalsAggainst, chartSize, chartXpos);
 			} else {
 				pieChart(2, goalsFor + goalsAggainst, chartSize, chartXpos);
 			}
 		}
 
+		parent.tint(255, 126);
+		parent.image(football, chartXpos - football.width / 2, parent.height / 2 - football.height / 2);
+		parent.noTint();
 	}
 
 	void pieChart(int drawChart, float sumOfGoals, float chartSize, float chartXpos) {
