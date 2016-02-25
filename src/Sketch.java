@@ -23,12 +23,23 @@ public class Sketch extends PApplet {
 	private float movieDuration;
 	private double startTime, endTime;
 
+	private float fs16;
+	private float fs20;
+	private float fs24;
+	private float fs32;
+	private float fs48;
+
 	public void setup() {
 
 		smooth();
 
 		PFont f = loadFont("res/font/BlairMdITCTT-Medium-48.vlw");
 		textFont(f, 48);
+		fs16 = height / 50f;
+		fs20 = height / 40f;
+		fs24 = height / 33.33f;
+		fs32 = height / 25f;
+		fs48 = height / 16.66f;
 
 		FLAG_SIZE = height / 30f;
 
@@ -232,9 +243,6 @@ public class Sketch extends PApplet {
 		boolean isMouseOverCountry = false;
 		image(map, 0, 0);
 
-		noStroke();
-		fill(200, 200, 200, 100);
-
 		float xRect = width - (logo.width + 15f);
 		float yRect = 15;
 		float xButton = (logo.width / 2 + xRect) - onButton.width / 2;
@@ -242,8 +250,10 @@ public class Sketch extends PApplet {
 		float xText = logo.width / 2 + xRect;
 		float yText = logo.height * 0.2f + yRect;
 
-		rect(xRect, yRect, logo.width, logo.height * 0.75f, 7);
-		textSize(18);
+		noStroke();
+		fill(200, 200, 200, 100);
+		rect(xRect, yRect, logo.width, logo.height, 7);
+		textSize(fs16);
 		textAlign(CENTER);
 		fill(0);
 		text("group\nfilter", xText, yText);
@@ -257,7 +267,7 @@ public class Sketch extends PApplet {
 					country.setMouseOver(true);
 					selectedCountry = country;
 					isMouseOverCountry = true;
-
+					text("Group\n" + selectedCountry.getGroup(), xText, yText + logo.height * 0.6f);
 				} else {
 					country.setMouseOver(false);
 				}
@@ -273,6 +283,7 @@ public class Sketch extends PApplet {
 				}
 			}
 		} else {
+			text("All\nGroups", xText, yText + (logo.height * 0.6f));
 			image(offButton, xButton, yButton);
 			for (Country country : countries) {
 				if (overCountry(country.getFlag_position().x, country.getFlag_position().y, FLAG_SIZE)) {
@@ -301,6 +312,11 @@ public class Sketch extends PApplet {
 		boolean isMouseOverCountry = false;
 
 		if (groupFilterActive) {
+
+			textSize(fs48);
+			fill(255);
+			textAlign(CENTER);
+			text("Group " + selectedCountry.getGroup(), width / 2, 50);
 
 			float i = 0;
 
