@@ -401,11 +401,14 @@ public class Country {
 
 			// win text
 			parent.textSize(fs24);
-			parent.fill(green[0], green[1], green[2]);
 			parent.textAlign(PApplet.CENTER);
 			float t = 0.5f;
 			float xBezierWin = parent.bezierPoint(x1, x1, x2, x2, t);
 			float yBezierWin = parent.bezierPoint(y1, 0, y2, 0, t);
+
+			parent.fill(0);
+			parent.text(won, xBezierWin + 1, yBezierWin + 1);
+			parent.fill(green[0], green[1], green[2]);
 			parent.text(won, xBezierWin, yBezierWin);
 		}
 
@@ -414,16 +417,20 @@ public class Country {
 			parent.noFill();
 			float sw = PApplet.map(draw, 0, played, 0, 20);
 			parent.strokeWeight(sw);
-			parent.stroke(255, 255, 255);
+			parent.stroke(255);
 			parent.line(x1, y1, x2, y2);
 
 			// draw text
 			parent.textSize(fs24);
-			parent.fill(255);
+			parent.textAlign(PApplet.CENTER);
 			float xDraw = ((parent.width / 2) - ((x2 - x1) / 2));
 			float yDraw = ((parent.height / 2) - ((y1 - y2) / 2)) - (TARGET_FLAG_SIZE_CENTER * 0.75f);
 
+			parent.fill(0);
+			parent.text(draw, xDraw + 1, yDraw + 1);
+			parent.fill(255);
 			parent.text(draw, xDraw, yDraw);
+
 		}
 
 		if (lost > 0) {
@@ -431,17 +438,19 @@ public class Country {
 			parent.noFill();
 			float sw = PApplet.map(lost, 0, played, 0, 20);
 			parent.strokeWeight(sw);
-			parent.strokeWeight(sw);
 			parent.stroke(red[0], red[1], red[2]);
 			parent.bezier(x1, y1, x1, parent.height, x2, parent.height, x2, y2);
 
 			// lost text
 			parent.textSize(fs24);
-			parent.fill(red[0], red[1], red[2]);
 			parent.textAlign(PApplet.CENTER);
 			float t = 0.5f;
 			float xBezierLost = parent.bezierPoint(x1, x1, x2, x2, t);
 			float yBezierLost = parent.bezierPoint(y1, parent.height, y2, parent.height, t);
+
+			parent.fill(0);
+			parent.text(lost, xBezierLost + 1, yBezierLost + 1);
+			parent.fill(red[0], red[1], red[2]);
 			parent.text(lost, xBezierLost, yBezierLost);
 		}
 
@@ -589,7 +598,7 @@ public class Country {
 
 		parent.fill(255);
 		parent.noStroke();
-		parent.ellipse(xMid, yMid, FLAG_SIZE, FLAG_SIZE);
+		parent.ellipse(xMid, yMid, FLAG_SIZE + 5, FLAG_SIZE + 5);
 
 		parent.image(field, xMid - FLAG_SIZE / 2, yMid - FLAG_SIZE / 2, FLAG_SIZE, FLAG_SIZE);
 
