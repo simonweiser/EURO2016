@@ -9,5 +9,8 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/gluegen-rt.jar"/>
 	<classpathentry kind="lib" path="lib/jogl-all.jar"/>
+	<classpathentry kind="lib" path="lib/video/gstreamer-java.jar"/>
+	<classpathentry kind="lib" path="lib/video/jna.jar"/>
+	<classpathentry kind="lib" path="lib/video/video.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

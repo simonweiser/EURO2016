@@ -7,6 +7,7 @@ import processing.core.PFont;
 import processing.core.PImage;
 import processing.core.PVector;
 import processing.data.Table;
+import processing.video.Movie;
 
 public class Sketch extends PApplet {
 
@@ -18,6 +19,10 @@ public class Sketch extends PApplet {
 	private int drawSceneNum, currentFrameCount;
 	private boolean groupFilterActive = false;
 
+	private Movie splashMovie;
+	private float movieDuration;
+	private double startTime, endTime;
+
 	public void setup() {
 
 		smooth();
@@ -28,11 +33,11 @@ public class Sketch extends PApplet {
 		FLAG_SIZE = height / 30f;
 
 		map = loadImage("res/img/map.png");
-		image(map, 0, 0, width, height);
+		map.resize(width, height);
 		mercatorMap = new MercatorMap(width, height, 67.25f, 33.1376f, -30.7617f, 59.9414f);
 
 		logo = loadImage("res/img/em2016_logo.png");
-		image(logo, 10, height - 160, 110, 146);
+		logo.resize(width/13, height/6);
 
 		onButton = loadImage("res/img/onButton.png");
 		offButton = loadImage("res/img/offButton.png");
@@ -48,6 +53,11 @@ public class Sketch extends PApplet {
 
 		createCountries();
 
+		splashMovie = new Movie(this, "res/data/splashVideo.mp4");
+//		splashMovie.play();
+		movieDuration = splashMovie.duration() + 2f;
+		startTime = System.currentTimeMillis() / 1000.0;
+
 	}
 
 	public void settings() {
@@ -56,6 +66,10 @@ public class Sketch extends PApplet {
 
 	public void draw() {
 		switch (drawSceneNum) {
+		case 0:
+			updateScene0(mouseX, mouseY);
+			break;
+
 		case 1:
 			updateScene1(mouseX, mouseY);
 			break;
@@ -83,8 +97,8 @@ public class Sketch extends PApplet {
 
 		FLAG_SIZE = height / 30f;
 
-		image(map, 0, 0, width, height);
-		image(logo, 10, height - 160, 110, 146);
+		image(map, 0, 0);
+		image(logo, 10, height - logo.height-15);
 
 		drawSceneNum = 1;
 		selectedCountry = null;
@@ -122,7 +136,7 @@ public class Sketch extends PApplet {
 
 	public void mouseClicked() {
 
-		if (overButton(10, height - 160 - onButton.height, onButton.width, onButton.height)) {
+		if (overButton(10, height - logo.height-15 - onButton.height, onButton.width, onButton.height)) {
 			groupFilterActive = !groupFilterActive;
 		}
 
@@ -183,19 +197,37 @@ public class Sketch extends PApplet {
 	}
 
 	/**
+	 * SplashScreen
+	 */
+	private void updateScene0(int mouseX, int mouseY) {
+		endTime = System.currentTimeMillis() / 1000.0;
+
+		if (endTime - startTime > movieDuration) {
+			drawSceneNum = 1;
+		} else {
+			background(0);
+			image(splashMovie, 0, 0);
+			// image(splashMovie, width / 2 - 400, height / 2 - 300, 800, 600);
+		}
+	}
+
+	/**
+	 * Called every time a new frame is available to read
+	 */
+	public void movieEvent(Movie m) {
+		m.read();
+	}
+
+	/**
 	 * Karte
 	 */
 	private void updateScene1(int x, int y) {
 		boolean isMouseOverCountry = false;
-		image(map, 0, 0, width, height);
-		image(logo, 10, height - 160, 110, 146);
+		image(map, 0, 0);
+		image(logo, 10, height - logo.height - 15);
+
 		if (groupFilterActive) {
-
-			// fill(0, 255, 0);
-//			 rect(10, height - 160 - height / 45, height / 45, height / 45);
-
-			image(onButton,10, height - 160 - onButton.height, onButton.width, onButton.height);
-			
+			image(onButton, 10, height - logo.height-15 - onButton.height, onButton.width, onButton.height);
 			for (Country country : countries) {
 				if (overCountry(country.getFlag_position().x, country.getFlag_position().y, FLAG_SIZE)) {
 					country.setMouseOver(true);
@@ -217,11 +249,7 @@ public class Sketch extends PApplet {
 				}
 			}
 		} else {
-
-//			fill(255, 0, 0);
-//			rect(10, height - 160 - height / 45, height / 45, height / 45);
-			image(offButton,10, height - 160 - offButton.height, offButton.width, offButton.height);
-			
+			image(offButton, 10, height - logo.height-15 - offButton.height, offButton.width, offButton.height);
 			for (Country country : countries) {
 				if (overCountry(country.getFlag_position().x, country.getFlag_position().y, FLAG_SIZE)) {
 					country.setMouseOver(true);
@@ -245,7 +273,6 @@ public class Sketch extends PApplet {
 	 */
 	private void updateScene2(int mouseX, int mouseY) {
 		image(background, 0, 0);
-		// image(logo, 10, height - 160, 110, 146);
 
 		boolean isMouseOverCountry = false;
 
@@ -310,7 +337,6 @@ public class Sketch extends PApplet {
 	 */
 	private void updateScene3(int mouseX, int mouseY) {
 		image(background, 0, 0);
-		// image(logo, 10, height - 160, 110, 146);
 
 		selectedCountryDetail.displayDetailRadial(13, selectedCountry, true, currentFrameCount);
 		selectedCountry.displayDetailCenter();
@@ -320,9 +346,7 @@ public class Sketch extends PApplet {
 	 * Team Info
 	 */
 	private void updateScene4(int mouseX, int mouseY) {
-		// background(200);
 		image(background, 0, 0);
-		// image(logo, 10, height - 160, 110, 146);
 
 		selectedCountry.displayDetailInfo();
 	}
