@@ -37,7 +37,7 @@ public class Sketch extends PApplet {
 		mercatorMap = new MercatorMap(width, height, 67.25f, 33.1376f, -30.7617f, 59.9414f);
 
 		logo = loadImage("res/img/em2016_logo.png");
-		logo.resize(width/13, height/6);
+		logo.resize(width / 13, height / 6);
 
 		onButton = loadImage("res/img/onButton.png");
 		offButton = loadImage("res/img/offButton.png");
@@ -54,7 +54,7 @@ public class Sketch extends PApplet {
 		createCountries();
 
 		splashMovie = new Movie(this, "res/data/splashVideo.mp4");
-//		splashMovie.play();
+		// splashMovie.play();
 		movieDuration = splashMovie.duration() + 2f;
 		startTime = System.currentTimeMillis() / 1000.0;
 
@@ -98,7 +98,7 @@ public class Sketch extends PApplet {
 		FLAG_SIZE = height / 30f;
 
 		image(map, 0, 0);
-		image(logo, 10, height - logo.height-15);
+		image(logo, 10, height - logo.height - 15);
 
 		drawSceneNum = 1;
 		selectedCountry = null;
@@ -136,7 +136,7 @@ public class Sketch extends PApplet {
 
 	public void mouseClicked() {
 
-		if (overButton(10, height - logo.height-15 - onButton.height, onButton.width, onButton.height)) {
+		if (overButton(10, height - logo.height - 15 - onButton.height, onButton.width, onButton.height)) {
 			groupFilterActive = !groupFilterActive;
 		}
 
@@ -227,7 +227,7 @@ public class Sketch extends PApplet {
 		image(logo, 10, height - logo.height - 15);
 
 		if (groupFilterActive) {
-			image(onButton, 10, height - logo.height-15 - onButton.height, onButton.width, onButton.height);
+			image(onButton, 10, height - logo.height - 15 - onButton.height, onButton.width, onButton.height);
 			for (Country country : countries) {
 				if (overCountry(country.getFlag_position().x, country.getFlag_position().y, FLAG_SIZE)) {
 					country.setMouseOver(true);
@@ -249,7 +249,7 @@ public class Sketch extends PApplet {
 				}
 			}
 		} else {
-			image(offButton, 10, height - logo.height-15 - offButton.height, offButton.width, offButton.height);
+			image(offButton, 10, height - logo.height - 15 - offButton.height, offButton.width, offButton.height);
 			for (Country country : countries) {
 				if (overCountry(country.getFlag_position().x, country.getFlag_position().y, FLAG_SIZE)) {
 					country.setMouseOver(true);
@@ -323,7 +323,9 @@ public class Sketch extends PApplet {
 			selectedCountryDetail = null;
 		}
 
-		if (overCountry(selectedCountry.getFlag_position().x + selectedCountry.getFLAG_SIZE() / 2, selectedCountry.getFlag_position().y + selectedCountry.getFLAG_SIZE() / 2, selectedCountry.getFLAG_SIZE())) {
+		if (overCountry(selectedCountry.getFlag_position().x + selectedCountry.getFLAG_SIZE() / 2,
+				selectedCountry.getFlag_position().y + selectedCountry.getFLAG_SIZE() / 2,
+				selectedCountry.getFLAG_SIZE())) {
 			selectedCountry.setMouseOverCenter(true);
 		} else {
 			selectedCountry.setMouseOverCenter(false);
@@ -407,7 +409,8 @@ public class Sketch extends PApplet {
 		Table h2hData = loadTable("res/data/h2h_alltime/h2h_" + name.toLowerCase() + "_alltime.csv", "header");
 		Table countryInfo = loadTable("res/data/team_info/team_info_" + name.toLowerCase() + ".csv", "header");
 		Table players = loadTable("res/data/players/playersCSV/players_" + name.toLowerCase() + ".csv", "header");
-		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, team_logo, false, h2hData, countryInfo, players, group);
+		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, team_logo, false, h2hData,
+				countryInfo, players, group);
 		countries.add(country);
 	}
 
