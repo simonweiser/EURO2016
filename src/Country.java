@@ -258,15 +258,15 @@ public class Country {
 
 	public void displayDetailCenter() {
 		float ds = TARGET_FLAG_SIZE_CENTER - FLAG_SIZE;
-		FLAG_SIZE += ds * SPEED;
+		FLAG_SIZE += ds * SPEED * 1.5f;
 
 		float targetX = parent.width / 2 - TARGET_FLAG_SIZE_CENTER / 2;
 		float dx = targetX - flag_position.x;
-		flag_position.x += dx * SPEED;
+		flag_position.x += dx * SPEED * 1.5f;
 
 		float targetY = parent.height / 2 - TARGET_FLAG_SIZE_CENTER / 2;
 		float dy = targetY - flag_position.y;
-		flag_position.y += dy * SPEED;
+		flag_position.y += dy * SPEED * 1.5f;
 
 		if (mouseOverCenter) {
 			parent.image(hover_img, flag_position.x, flag_position.y, FLAG_SIZE, FLAG_SIZE);
@@ -596,6 +596,14 @@ public class Country {
 		// Mitte
 		float ds = TEAM_INFO_ELLIPSE_SIZE - FLAG_SIZE;
 		FLAG_SIZE += ds * SPEED * 5f;
+
+		float targetXcenter = parent.width / 2 - TEAM_INFO_ELLIPSE_SIZE / 2;
+		float dx = targetXcenter - flag_position.x;
+		flag_position.x += dx * SPEED * 5f;
+
+		float targetYcenter = parent.height / 2 - TEAM_INFO_ELLIPSE_SIZE / 2;
+		float dy = targetYcenter - flag_position.y;
+		flag_position.y += dy * SPEED * 5f;
 
 		parent.fill(255);
 		parent.noStroke();

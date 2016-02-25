@@ -149,16 +149,46 @@ public class Sketch extends PApplet {
 
 	public void mouseClicked() {
 
-		float xRect = width - (logo.width + 15f);
-		float yRect = 15;
-		float xButton = (logo.width / 2 + xRect) - onButton.width / 2;
-		float yButton = logo.height * 0.4f + yRect;
+		float xRectGroupButton = width - (logo.width + 15f);
+		float yRectGroupButton = 15;
+		float xButtonGroupButton = (logo.width / 2 + xRectGroupButton) - onButton.width / 2;
+		float yButtonGroupButton = logo.height * 0.4f + yRectGroupButton;
 
-		if (overButton((int) xButton, (int) yButton, onButton.width, onButton.height)) {
+		float widthRect = logo.width;
+		float heightRect = height / 30f;
+
+		float xRect = 15f;
+		float yRect = height - heightRect - 15f;
+
+		// back button
+		if (overButton((int) xRect, (int) yRect, (int) widthRect, (int) heightRect)) {
+			switch (drawSceneNum) {
+			case 1:
+				break;
+
+			case 2:
+				reset();
+				break;
+
+			case 3:
+				drawSceneNum = 2;
+				break;
+
+			case 4:
+				drawSceneNum = 2;
+				break;
+
+			default:
+				println("ERROR: MOUSECLICKED");
+				break;
+			}
+		}
+
+		else if (overButton((int) xButtonGroupButton, (int) yButtonGroupButton, onButton.width, onButton.height)) {
 			groupFilterActive = !groupFilterActive;
 		}
 
-		if (mouseButton == LEFT && selectedCountry != null) {
+		else if (mouseButton == LEFT && selectedCountry != null) {
 			switch (drawSceneNum) {
 			case 1:
 				countrySorted = sortCountriesByPlayed();
@@ -309,9 +339,13 @@ public class Sketch extends PApplet {
 	private void updateScene2(int mouseX, int mouseY) {
 		image(background, 0, 0);
 
+		drawBackButton();
+
 		boolean isMouseOverCountry = false;
 
-		if (groupFilterActive) {
+		if (groupFilterActive)
+
+		{
 
 			textSize(fs48);
 			fill(255);
@@ -338,7 +372,9 @@ public class Sketch extends PApplet {
 					}
 				}
 			}
-		} else {
+		} else
+
+		{
 
 			float i = 0;
 			for (Country country : countrySorted) {
@@ -359,11 +395,15 @@ public class Sketch extends PApplet {
 
 		}
 
-		if (isMouseOverCountry == false) {
+		if (isMouseOverCountry == false)
+
+		{
 			selectedCountryDetail = null;
 		}
 
-		if (overCountry(selectedCountry.getFlag_position().x + selectedCountry.getFLAG_SIZE() / 2,
+		if (
+
+		overCountry(selectedCountry.getFlag_position().x + selectedCountry.getFLAG_SIZE() / 2,
 				selectedCountry.getFlag_position().y + selectedCountry.getFLAG_SIZE() / 2,
 				selectedCountry.getFLAG_SIZE())) {
 			selectedCountry.setMouseOverCenter(true);
@@ -379,6 +419,7 @@ public class Sketch extends PApplet {
 	 */
 	private void updateScene3(int mouseX, int mouseY) {
 		image(background, 0, 0);
+		drawBackButton();
 
 		selectedCountryDetail.displayDetailRadial(13, selectedCountry, true, currentFrameCount);
 		selectedCountry.displayDetailCenter();
@@ -389,6 +430,7 @@ public class Sketch extends PApplet {
 	 */
 	private void updateScene4(int mouseX, int mouseY) {
 		image(background, 0, 0);
+		drawBackButton();
 
 		selectedCountry.displayDetailInfo();
 	}
@@ -452,6 +494,32 @@ public class Sketch extends PApplet {
 		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, team_logo, false, h2hData,
 				countryInfo, players, group);
 		countries.add(country);
+	}
+
+	private void drawBackButton() {
+
+		float widthRect = logo.width;
+		float heightRect = height / 30f;
+
+		float xRect = 15f;
+		float yRect = height - heightRect - 15f;
+		float xText = widthRect / 2 + xRect;
+		float yText = yRect + heightRect / 2;
+
+		noStroke();
+		if (overButton((int) xRect, (int) yRect, (int) widthRect, (int) heightRect)) {
+			fill(250, 250, 250, 200);
+			rect(xRect, yRect, widthRect, heightRect, 7);
+			fill(0);
+		} else {
+			fill(200, 200, 200, 100);
+			rect(xRect, yRect, widthRect, heightRect, 7);
+			fill(255);
+		}
+
+		textSize(fs16);
+		textAlign(CENTER, CENTER);
+		text("Back", xText, yText);
 	}
 
 	public static void main(String args[]) {
