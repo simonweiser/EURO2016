@@ -19,7 +19,7 @@ public class Country {
 	private boolean mouseOverCenter = false;
 
 	// opponent, played, won, draw, lost, goals_for, goals_aggainst
-	private Table h2hData, countryInfo, players;
+	private Table h2hData, countryInfo, players, h2hData5years;
 
 	float TARGET_FLAG_SIZE_CENTER;
 	float TARGET_FLAG_SIZE_RADIAL;
@@ -50,7 +50,7 @@ public class Country {
 
 	public Country(PApplet parent, float FLAG_SIZE, String name, PVector flag_position, PImage flag_img,
 			PImage hover_img, PImage team_logo, boolean mouseOver, Table h2hData, Table countryInfo, Table players,
-			String group) {
+			String group, Table h2hData5years) {
 
 		this.parent = parent;
 		this.FLAG_SIZE = FLAG_SIZE;
@@ -61,6 +61,7 @@ public class Country {
 		this.setTeam_logo(team_logo);
 		this.mouseOver = mouseOver;
 		this.h2hData = h2hData;
+		this.h2hData5years = h2hData5years;
 		this.countryInfo = countryInfo;
 		this.players = players;
 		this.setGroup(group);
@@ -246,6 +247,14 @@ public class Country {
 		this.group = group;
 	}
 
+	public Table getH2hData5years() {
+		return h2hData5years;
+	}
+
+	public void setH2hData5years(Table h2hData5years) {
+		this.h2hData5years = h2hData5years;
+	}
+
 	public void display() {
 		if (mouseOver) {
 			parent.image(hover_img, flag_position.x - FLAG_SIZE / 2, flag_position.y - FLAG_SIZE / 2, FLAG_SIZE,
@@ -275,7 +284,8 @@ public class Country {
 		}
 	}
 
-	public void displayDetailRadial(float i, Country selectedCountry, boolean showDetail, int currentFrameCount) {
+	public void displayDetailRadial(float i, Country selectedCountry, boolean showDetail, int currentFrameCount,
+			boolean seasonFilter) {
 		PVector centerFlagPosition = selectedCountry.getFlag_position();
 		float centerFlagSize = selectedCountry.getFLAG_SIZE();
 
@@ -288,20 +298,41 @@ public class Country {
 
 		int maxPlayed = 0;
 
-		for (TableRow row : h2hData.rows()) {
-			String opponentName = row.getString("opponent");
-			if (selectedCountry.getName().equals(opponentName)) {
-				played = row.getInt("played");
-				won = row.getInt("lost");
-				draw = row.getInt("draw");
-				lost = row.getInt("won");
-				goalsAggainst = row.getInt("goals_for");
-				goalsFor = row.getInt("goals_aggainst");
+		if (seasonFilter) {
+			for (TableRow row : h2hData5years.rows()) {
+				String opponentName = row.getString("opponent");
+				if (selectedCountry.getName().equals(opponentName)) {
+					played = row.getInt("played");
+					won = row.getInt("lost");
+					draw = row.getInt("draw");
+					lost = row.getInt("won");
+					goalsAggainst = row.getInt("goals_for");
+					goalsFor = row.getInt("goals_aggainst");
 
-				for (TableRow selectedCountryRow : selectedCountry.getH2hData().rows()) {
-					int currentPlayed = selectedCountryRow.getInt("played");
-					if (currentPlayed > maxPlayed) {
-						maxPlayed = currentPlayed;
+					for (TableRow selectedCountryRow : selectedCountry.getH2hData5years().rows()) {
+						int currentPlayed = selectedCountryRow.getInt("played");
+						if (currentPlayed > maxPlayed) {
+							maxPlayed = currentPlayed;
+						}
+					}
+				}
+			}
+		} else {
+			for (TableRow row : h2hData.rows()) {
+				String opponentName = row.getString("opponent");
+				if (selectedCountry.getName().equals(opponentName)) {
+					played = row.getInt("played");
+					won = row.getInt("lost");
+					draw = row.getInt("draw");
+					lost = row.getInt("won");
+					goalsAggainst = row.getInt("goals_for");
+					goalsFor = row.getInt("goals_aggainst");
+
+					for (TableRow selectedCountryRow : selectedCountry.getH2hData().rows()) {
+						int currentPlayed = selectedCountryRow.getInt("played");
+						if (currentPlayed > maxPlayed) {
+							maxPlayed = currentPlayed;
+						}
 					}
 				}
 			}

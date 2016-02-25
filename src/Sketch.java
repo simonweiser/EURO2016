@@ -29,6 +29,8 @@ public class Sketch extends PApplet {
 	private float fs32;
 	private float fs48;
 
+	private boolean seasonFilter;
+
 	public void setup() {
 
 		smooth();
@@ -59,18 +61,19 @@ public class Sketch extends PApplet {
 		background.resize(width, height);
 		background.filter(BLUR, 6);
 
-		drawSceneNum = 0;
+		drawSceneNum = 1;
 		selectedCountry = null;
 		selectedCountryDetail = null;
 		currentFrameCount = 0;
 
 		createCountries();
 
-		splashMovie = new Movie(this, "res/data/splashVideo.mp4");
-		splashMovie.play();
-		movieDuration = splashMovie.duration() + 0.5f;
-		startTime = System.currentTimeMillis() / 1000.0;
+		// splashMovie = new Movie(this, "res/data/splashVideo.mp4");
+		// splashMovie.play();
+		// movieDuration = splashMovie.duration() + 0.5f;
+		// startTime = System.currentTimeMillis() / 1000.0;
 
+		seasonFilter = false;
 	}
 
 	public void settings() {
@@ -131,18 +134,30 @@ public class Sketch extends PApplet {
 		ArrayList<Country> countriesCopy = new ArrayList<Country>();
 		countriesCopy.addAll(countries);
 		countriesCopy.remove(selectedCountry);
+		if (seasonFilter) {
+			Collections.sort(countriesCopy, new Comparator<Country>() {
 
-		Collections.sort(countriesCopy, new Comparator<Country>() {
+				@Override
+				public int compare(Country c1, Country c2) {
+					int rowIndex1 = c1.getH2hData5years().findRowIndex(selectedCountry.getName(), "opponent");
+					int rowIndex2 = c2.getH2hData5years().findRowIndex(selectedCountry.getName(), "opponent");
+					return c1.getH2hData5years().getInt(rowIndex1, "played")
+							- c2.getH2hData5years().getInt(rowIndex2, "played");
+				}
 
-			@Override
-			public int compare(Country c1, Country c2) {
-				int rowIndex1 = c1.getH2hData().findRowIndex(selectedCountry.getName(), "opponent");
-				int rowIndex2 = c2.getH2hData().findRowIndex(selectedCountry.getName(), "opponent");
-				return c1.getH2hData().getInt(rowIndex1, "played") - c2.getH2hData().getInt(rowIndex2, "played");
-			}
+			});
+		} else {
+			Collections.sort(countriesCopy, new Comparator<Country>() {
 
-		});
+				@Override
+				public int compare(Country c1, Country c2) {
+					int rowIndex1 = c1.getH2hData().findRowIndex(selectedCountry.getName(), "opponent");
+					int rowIndex2 = c2.getH2hData().findRowIndex(selectedCountry.getName(), "opponent");
+					return c1.getH2hData().getInt(rowIndex1, "played") - c2.getH2hData().getInt(rowIndex2, "played");
+				}
 
+			});
+		}
 		return countriesCopy;
 
 	}
@@ -162,25 +177,32 @@ public class Sketch extends PApplet {
 
 		// back button
 		if (overButton((int) xRect, (int) yRect, (int) widthRect, (int) heightRect)) {
-			switch (drawSceneNum) {
-			case 1:
-				break;
+			// switch (drawSceneNum) {
+			// case 1:
+			// break;
+			//
+			// case 2:
+			// reset();
+			// break;
+			//
+			// case 3:
+			// drawSceneNum = 2;
+			// break;
+			//
+			// case 4:
+			// drawSceneNum = 2;
+			// break;
+			//
+			// default:
+			// println("ERROR: MOUSECLICKED");
+			// break;
+			// }
 
-			case 2:
-				reset();
-				break;
-
-			case 3:
-				drawSceneNum = 2;
-				break;
-
-			case 4:
-				drawSceneNum = 2;
-				break;
-
-			default:
-				println("ERROR: MOUSECLICKED");
-				break;
+			seasonFilter = !seasonFilter;
+			countrySorted = sortCountriesByPlayed();
+			if (selectedCountryDetail != null) {
+				selectedCountryDetail.setGoalsForCounter(0);
+				selectedCountryDetail.setGoalsAggainstCounter(0);
 			}
 		}
 
@@ -367,7 +389,7 @@ public class Sketch extends PApplet {
 							opponent.setMouseOverDetail(false);
 						}
 
-						opponent.displayDetailRadial(i, selectedCountry, false, 0);
+						opponent.displayDetailRadial(i, selectedCountry, false, 0, seasonFilter);
 						i++;
 					}
 				}
@@ -388,7 +410,7 @@ public class Sketch extends PApplet {
 						country.setMouseOverDetail(false);
 					}
 
-					country.displayDetailRadial(i, selectedCountry, false, 0);
+					country.displayDetailRadial(i, selectedCountry, false, 0, seasonFilter);
 					i++;
 				}
 			}
@@ -419,7 +441,7 @@ public class Sketch extends PApplet {
 		image(background, 0, 0);
 		drawBackButton();
 
-		selectedCountryDetail.displayDetailRadial(13, selectedCountry, true, currentFrameCount);
+		selectedCountryDetail.displayDetailRadial(13, selectedCountry, true, currentFrameCount, seasonFilter);
 		selectedCountry.displayDetailCenter();
 	}
 
@@ -487,10 +509,11 @@ public class Sketch extends PApplet {
 		hover_img.filter(POSTERIZE, 2);
 		PImage team_logo = loadImage("res/img/teamlogos/" + name.toLowerCase() + ".png");
 		Table h2hData = loadTable("res/data/h2h_alltime/h2h_" + name.toLowerCase() + "_alltime.csv", "header");
+		Table h2hData5years = loadTable("res/data/h2h_5years/h2h_" + name.toLowerCase() + "_5years.csv", "header");
 		Table countryInfo = loadTable("res/data/team_info/team_info_" + name.toLowerCase() + ".csv", "header");
 		Table players = loadTable("res/data/players/playersCSV/players_" + name.toLowerCase() + ".csv", "header");
 		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, team_logo, false, h2hData,
-				countryInfo, players, group);
+				countryInfo, players, group, h2hData5years);
 		countries.add(country);
 	}
 
