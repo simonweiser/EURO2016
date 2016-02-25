@@ -401,9 +401,7 @@ public class Sketch extends PApplet {
 			selectedCountryDetail = null;
 		}
 
-		if (
-
-		overCountry(selectedCountry.getFlag_position().x + selectedCountry.getFLAG_SIZE() / 2,
+		if (overCountry(selectedCountry.getFlag_position().x + selectedCountry.getFLAG_SIZE() / 2,
 				selectedCountry.getFlag_position().y + selectedCountry.getFLAG_SIZE() / 2,
 				selectedCountry.getFLAG_SIZE())) {
 			selectedCountry.setMouseOverCenter(true);

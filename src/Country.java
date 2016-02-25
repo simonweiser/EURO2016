@@ -664,7 +664,7 @@ public class Country {
 								pWidth, pHeight);
 					}
 
-					if (overPlayer(targetX1, targetY1, pHeight)) {
+					if (overPlayer(targetX1 - pWidth / 2, targetY1 - pHeight / 2, pWidth, pHeight)) {
 						showPlayerDetail = true;
 					}
 					j++;
@@ -715,7 +715,7 @@ public class Country {
 					parent.image(player.getPlayerImg(), targetX - pWidth / 2.0f, targetY - pHeight / 2.0f, pWidth,
 							pHeight);
 
-					if (overPlayer(targetX, targetY, pHeight)) {
+					if (overPlayer(targetX - pWidth / 2, targetY - pHeight / 2, pWidth, pHeight)) {
 						selectedPlayer = player;
 					}
 
@@ -727,10 +727,8 @@ public class Country {
 
 	}
 
-	private boolean overPlayer(float x, float y, float diameter) {
-		float disX = x - parent.mouseX;
-		float disY = y - parent.mouseY;
-		if (PApplet.sqrt(PApplet.sq(disX) + PApplet.sq(disY)) < diameter / 2) {
+	boolean overPlayer(float x, float y, float width, float height) {
+		if (parent.mouseX >= x && parent.mouseX <= x + width && parent.mouseY >= y && parent.mouseY <= y + height) {
 			return true;
 		} else {
 			return false;
