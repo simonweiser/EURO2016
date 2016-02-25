@@ -41,8 +41,8 @@ public class Sketch extends PApplet {
 
 		onButton = loadImage("res/img/onButton.png");
 		offButton = loadImage("res/img/offButton.png");
-		onButton.resize(logo.width, 0);
-		offButton.resize(logo.width, 0);
+		onButton.resize(logo.width - 10, 0);
+		offButton.resize(logo.width - 10, 0);
 
 		background = loadImage("res/img/background_stadium.png");
 		background.resize(width, height);
@@ -138,7 +138,12 @@ public class Sketch extends PApplet {
 
 	public void mouseClicked() {
 
-		if (overButton(10, height - logo.height - 15 - onButton.height, onButton.width, onButton.height)) {
+		float xRect = width - (logo.width + 15f);
+		float yRect = 15;
+		float xButton = (logo.width / 2 + xRect) - onButton.width / 2;
+		float yButton = logo.height * 0.4f + yRect;
+
+		if (overButton((int) xButton, (int) yButton, onButton.width, onButton.height)) {
 			groupFilterActive = !groupFilterActive;
 		}
 
@@ -226,27 +231,25 @@ public class Sketch extends PApplet {
 	private void updateScene1(int x, int y) {
 		boolean isMouseOverCountry = false;
 		image(map, 0, 0);
-		
-		
-		stroke(0);
-		strokeWeight(1);
-		fill(220);
-		
-		float xRect = 15;
-		float yRect = height - logo.height - 15;
-		float xButton = (logo.width / 2 + 15f) - onButton.width/2;
-		float yButton = height - logo.height * 0.75f;
-		float xText = logo.width / 2 + 15f;
-		float yText = height - logo.height * 0.9f;
-		
-		rect(xRect, yRect, logo.width, logo.height, 7);
-		textSize(16);
+
+		noStroke();
+		fill(200, 200, 200, 100);
+
+		float xRect = width - (logo.width + 15f);
+		float yRect = 15;
+		float xButton = (logo.width / 2 + xRect) - onButton.width / 2;
+		float yButton = logo.height * 0.4f + yRect;
+		float xText = logo.width / 2 + xRect;
+		float yText = logo.height * 0.2f + yRect;
+
+		rect(xRect, yRect, logo.width, logo.height * 0.75f, 7);
+		textSize(18);
 		textAlign(CENTER);
 		fill(0);
-		text("Group\nFilter", xText, yText);
-		
-		image(logo, xRect + logo.width+15, yRect);
-		
+		text("group\nfilter", xText, yText);
+
+		image(logo, 15, height - (logo.height + 15));
+
 		if (groupFilterActive) {
 			image(onButton, xButton, yButton);
 			for (Country country : countries) {
@@ -344,7 +347,9 @@ public class Sketch extends PApplet {
 			selectedCountryDetail = null;
 		}
 
-		if (overCountry(selectedCountry.getFlag_position().x + selectedCountry.getFLAG_SIZE() / 2, selectedCountry.getFlag_position().y + selectedCountry.getFLAG_SIZE() / 2, selectedCountry.getFLAG_SIZE())) {
+		if (overCountry(selectedCountry.getFlag_position().x + selectedCountry.getFLAG_SIZE() / 2,
+				selectedCountry.getFlag_position().y + selectedCountry.getFLAG_SIZE() / 2,
+				selectedCountry.getFLAG_SIZE())) {
 			selectedCountry.setMouseOverCenter(true);
 		} else {
 			selectedCountry.setMouseOverCenter(false);
@@ -428,7 +433,8 @@ public class Sketch extends PApplet {
 		Table h2hData = loadTable("res/data/h2h_alltime/h2h_" + name.toLowerCase() + "_alltime.csv", "header");
 		Table countryInfo = loadTable("res/data/team_info/team_info_" + name.toLowerCase() + ".csv", "header");
 		Table players = loadTable("res/data/players/playersCSV/players_" + name.toLowerCase() + ".csv", "header");
-		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, team_logo, false, h2hData, countryInfo, players, group);
+		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, team_logo, false, h2hData,
+				countryInfo, players, group);
 		countries.add(country);
 	}
 
