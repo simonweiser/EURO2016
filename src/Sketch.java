@@ -175,34 +175,42 @@ public class Sketch extends PApplet {
 		float xRect = 15f;
 		float yRect = height - heightRect - 15f;
 
-		// back button
-		if (overButton((int) xRect, (int) yRect, (int) widthRect, (int) heightRect)) {
-			// switch (drawSceneNum) {
-			// case 1:
-			// break;
-			//
-			// case 2:
-			// reset();
-			// break;
-			//
-			// case 3:
-			// drawSceneNum = 2;
-			// break;
-			//
-			// case 4:
-			// drawSceneNum = 2;
-			// break;
-			//
-			// default:
-			// println("ERROR: MOUSECLICKED");
-			// break;
-			// }
+		float yRectSeasonFilterButton = height - heightRect - logo.height;
 
+		float xSeasonFilterButton = xRect + (logo.width / 2 - onButton.width / 2);
+		float ySeasonFilterButton = yRectSeasonFilterButton * 1.1f;
+
+		// seasonFilterButton
+		if (overButton((int) xSeasonFilterButton, (int) ySeasonFilterButton, (int) widthRect, (int) heightRect)) {
 			seasonFilter = !seasonFilter;
 			countrySorted = sortCountriesByPlayed();
 			if (selectedCountryDetail != null) {
 				selectedCountryDetail.setGoalsForCounter(0);
 				selectedCountryDetail.setGoalsAggainstCounter(0);
+			}
+		}
+
+		// back button
+		if (overButton((int) xRect, (int) yRect, (int) widthRect, (int) heightRect)) {
+			switch (drawSceneNum) {
+			case 1:
+				break;
+
+			case 2:
+				reset();
+				break;
+
+			case 3:
+				drawSceneNum = 2;
+				break;
+
+			case 4:
+				drawSceneNum = 2;
+				break;
+
+			default:
+				println("ERROR: MOUSECLICKED");
+				break;
 			}
 		}
 
@@ -362,6 +370,7 @@ public class Sketch extends PApplet {
 		image(background, 0, 0);
 
 		drawBackButton();
+		drawSeasonFilterButton();
 
 		boolean isMouseOverCountry = false;
 
@@ -440,6 +449,7 @@ public class Sketch extends PApplet {
 	private void updateScene3(int mouseX, int mouseY) {
 		image(background, 0, 0);
 		drawBackButton();
+		drawSeasonFilterButton();
 
 		selectedCountryDetail.displayDetailRadial(13, selectedCountry, true, currentFrameCount, seasonFilter);
 		selectedCountry.displayDetailCenter();
@@ -515,6 +525,34 @@ public class Sketch extends PApplet {
 		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, team_logo, false, h2hData,
 				countryInfo, players, group, h2hData5years);
 		countries.add(country);
+	}
+
+	private void drawSeasonFilterButton() {
+
+		float widthRect = logo.width;
+		float heightRect = height / 30f;
+
+		float xRect = 15f;
+		float yRect = height - heightRect - logo.height;
+		float xText = widthRect / 2 + xRect;
+		float yText = yRect + heightRect * 1.1f;
+
+		float xButton = xRect + (logo.width / 2 - onButton.width / 2);
+		float yButton = yRect * 1.1f;
+
+		noStroke();
+		fill(200, 200, 200, 100);
+		rect(xRect, yRect, logo.width, logo.height * 0.75f, 7);
+		textSize(fs16);
+		textAlign(CENTER);
+		fill(255);
+		text("recent\nmatches\n5 years", xText, yText);
+
+		if (seasonFilter == true) {
+			image(onButton, xButton, yButton);
+		} else {
+			image(offButton, xButton, yButton);
+		}
 	}
 
 	private void drawBackButton() {
