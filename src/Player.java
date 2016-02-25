@@ -15,8 +15,7 @@ public class Player {
 	private PImage playerImg;
 	private PImage teamImg;
 
-	public Player(PApplet parent, String playerName, String birthday, String teamName, String position, String value,
-			int number, PImage playerImg, PImage teamImg) {
+	public Player(PApplet parent, String playerName, String birthday, String teamName, String position, String value, int number, PImage playerImg, PImage teamImg) {
 		this.parent = parent;
 		this.playerName = playerName;
 		this.birthday = birthday;
