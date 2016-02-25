@@ -7,6 +7,7 @@ import processing.core.PFont;
 import processing.core.PImage;
 import processing.core.PVector;
 import processing.data.Table;
+import processing.video.Movie;
 
 public class Sketch extends PApplet {
 
@@ -24,6 +25,10 @@ public class Sketch extends PApplet {
 	int currentFrameCount;
 	private boolean groupFilterActive = false;
 
+	private Movie splashMovie;
+	private float movieDuration;
+	private double startTime, endTime;
+
 	public void setup() {
 
 		smooth();
@@ -34,11 +39,11 @@ public class Sketch extends PApplet {
 		FLAG_SIZE = height / 30f;
 
 		map = loadImage("res/img/map.png");
-		image(map, 0, 0, width, height);
+		map.resize(width, height);
 		mercatorMap = new MercatorMap(width, height, 67.25f, 33.1376f, -30.7617f, 59.9414f);
 
 		logo = loadImage("res/img/em2016_logo.png");
-		image(logo, 10, height - 160, 110, 146);
+		logo.resize(110, 146);
 
 		background = loadImage("res/img/background_stadium.png");
 		background.resize(width, height);
@@ -51,6 +56,11 @@ public class Sketch extends PApplet {
 
 		createCountries();
 
+		splashMovie = new Movie(this, "res/data/splashVideo.mp4");
+		splashMovie.play();
+		movieDuration = splashMovie.duration() + 2f;
+		startTime = System.currentTimeMillis() / 1000.0;
+
 	}
 
 	public void settings() {
@@ -59,6 +69,10 @@ public class Sketch extends PApplet {
 
 	public void draw() {
 		switch (drawSceneNum) {
+		case 0:
+			updateScene0(mouseX, mouseY);
+			break;
+
 		case 1:
 			updateScene1(mouseX, mouseY);
 			break;
@@ -186,18 +200,38 @@ public class Sketch extends PApplet {
 	}
 
 	/**
+	 * SplashScreen
+	 */
+	private void updateScene0(int mouseX, int mouseY) {
+		endTime = System.currentTimeMillis() / 1000.0;
+
+		if (endTime - startTime > movieDuration) {
+			drawSceneNum = 1;
+		} else {
+			background(0);
+			image(splashMovie, 0, 0);
+			// image(splashMovie, width / 2 - 400, height / 2 - 300, 800, 600);
+		}
+	}
+
+	/**
+	 * Called every time a new frame is available to read
+	 */
+	public void movieEvent(Movie m) {
+		m.read();
+	}
+
+	/**
 	 * Karte
 	 */
 	private void updateScene1(int x, int y) {
 		boolean isMouseOverCountry = false;
+		image(map, 0, 0);
+		image(logo, 10, height - 160);
 
 		if (groupFilterActive) {
-			image(map, 0, 0, width, height);
-			image(logo, 10, height - 160, 110, 146);
-
 			fill(0, 255, 0);
 			rect(10, height - 160 - height / 45, height / 45, height / 45);
-
 			for (Country country : countries) {
 				if (overCountry(country.getFlag_position().x, country.getFlag_position().y, FLAG_SIZE)) {
 					country.setMouseOver(true);
@@ -219,8 +253,6 @@ public class Sketch extends PApplet {
 				}
 			}
 		} else {
-			image(map, 0, 0, width, height);
-			image(logo, 10, height - 160, 110, 146);
 			fill(255, 0, 0);
 			rect(10, height - 160 - height / 45, height / 45, height / 45);
 			for (Country country : countries) {
@@ -271,7 +303,9 @@ public class Sketch extends PApplet {
 			selectedCountryDetail = null;
 		}
 
-		if (overCountry(selectedCountry.getFlag_position().x + selectedCountry.getFLAG_SIZE() / 2, selectedCountry.getFlag_position().y + selectedCountry.getFLAG_SIZE() / 2, selectedCountry.getFLAG_SIZE())) {
+		if (overCountry(selectedCountry.getFlag_position().x + selectedCountry.getFLAG_SIZE() / 2,
+				selectedCountry.getFlag_position().y + selectedCountry.getFLAG_SIZE() / 2,
+				selectedCountry.getFLAG_SIZE())) {
 			selectedCountry.setMouseOverCenter(true);
 		} else {
 			selectedCountry.setMouseOverCenter(false);
@@ -358,7 +392,8 @@ public class Sketch extends PApplet {
 		Table h2hData = loadTable("res/data/h2h_alltime/h2h_" + name.toLowerCase() + "_alltime.csv", "header");
 		Table countryInfo = loadTable("res/data/team_info/team_info_" + name.toLowerCase() + ".csv", "header");
 		Table players = loadTable("res/data/players/playersCSV/players_" + name.toLowerCase() + ".csv", "header");
-		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, team_logo, false, h2hData, countryInfo, players, group);
+		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, team_logo, false, h2hData,
+				countryInfo, players, group);
 		countries.add(country);
 	}
 
