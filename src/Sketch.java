@@ -23,6 +23,7 @@ public class Sketch extends PApplet {
 	private float movieDuration;
 	private double startTime, endTime;
 
+	private float fs13;
 	private float fs16;
 	private float fs48;
 
@@ -34,6 +35,7 @@ public class Sketch extends PApplet {
 
 		PFont f = loadFont("res/font/BlairMdITCTT-Medium-48.vlw");
 		textFont(f, 48);
+		fs13 = height / 62f;
 		fs16 = height / 50f;
 		fs48 = height / 16.66f;
 
@@ -55,16 +57,16 @@ public class Sketch extends PApplet {
 		background.resize(width, height);
 		background.filter(BLUR, 6);
 
-		drawSceneNum = 0;
+		drawSceneNum = 1;
 		selectedCountry = null;
 		selectedCountryDetail = null;
 		currentFrameCount = 0;
 
 		createCountries();
 
-		splashMovie = new Movie(this, "res/data/splashVideo.mp4");
-		splashMovie.play();
-		movieDuration = splashMovie.duration() + 0.5f;
+		// splashMovie = new Movie(this, "res/data/splashVideo.mp4");
+		// splashMovie.play();
+		// movieDuration = splashMovie.duration() + 0.5f;
 		startTime = System.currentTimeMillis() / 1000.0;
 
 		seasonFilter = false;
@@ -402,6 +404,7 @@ public class Sketch extends PApplet {
 	 * Head2Head
 	 */
 	private void updateScene2(int mouseX, int mouseY) {
+
 		image(background, 0, 0);
 
 		drawBackButton();
@@ -477,6 +480,7 @@ public class Sketch extends PApplet {
 		}
 
 		selectedCountry.displayDetailCenter();
+		drawLegend();
 	}
 
 	/**
@@ -489,6 +493,7 @@ public class Sketch extends PApplet {
 
 		selectedCountryDetail.displayDetailRadial(13, selectedCountry, true, currentFrameCount, seasonFilter);
 		selectedCountry.displayDetailCenter();
+		drawLegend();
 	}
 
 	/**
@@ -499,6 +504,7 @@ public class Sketch extends PApplet {
 		drawBackButton();
 
 		selectedCountry.displayDetailInfo();
+		drawLegend();
 	}
 
 	private boolean overCountry(float x, float y, float diameter) {
@@ -644,6 +650,147 @@ public class Sketch extends PApplet {
 		textSize(fs16);
 		textAlign(CENTER, CENTER);
 		text("Back", xText, yText);
+	}
+
+	private void drawLegend() {
+
+		float widthRect = logo.width;
+		float heightRect = height / 30f;
+
+		float xRect = 15f;
+		float yRect = heightRect - 15f;
+		float xText = widthRect / 2 + xRect;
+		float yText = yRect + heightRect / 2;
+
+		noStroke();
+
+		switch (drawSceneNum) {
+		case 2:
+			if (overButton((int) xRect, (int) yRect, (int) widthRect, (int) heightRect)) {
+				fill(250, 250, 250, 200);
+				rect(xRect, yRect, widthRect, heightRect, 7);
+
+				fill(0);
+				textSize(fs16);
+				textAlign(CENTER, CENTER);
+				text("Legend", xText, yText);
+
+				float xRectLegend = xRect;
+				float yRectLegend = yRect * 2 + heightRect;
+				float widthRectLegend = widthRect * 4;
+				float heightRectLegend = heightRect * 10;
+
+				fill(250, 250, 250, 200);
+				rect(xRectLegend, yRectLegend, widthRectLegend, heightRectLegend, 7);
+
+				fill(0);
+				textAlign(LEFT);
+				text("Color:", xRectLegend + 10, yRectLegend + 30);
+				fill(60, 179, 113);
+				textSize(fs13);
+				text("- Positive record", xRectLegend + 10, yRectLegend + 62);
+				fill(255);
+				text("- Balanced record", xRectLegend + 10, yRectLegend + 94);
+				fill(255, 99, 71);
+				text("- Negative record", xRectLegend + 10, yRectLegend + 126);
+				fill(0);
+				textSize(fs16);
+				text("Distance:", xRectLegend + 10, yRectLegend + 158);
+				textSize(fs13);
+				text("- The closer the more matches played", xRectLegend + 10, yRectLegend + 190);
+				textSize(fs16);
+				text("Thickness:", xRectLegend + 10, yRectLegend + 222);
+				textSize(fs13);
+				text("- Clarity of record", xRectLegend + 10, yRectLegend + 254);
+			} else {
+				fill(200, 200, 200, 100);
+				rect(xRect, yRect, widthRect, heightRect, 7);
+
+				fill(255);
+				textSize(fs16);
+				textAlign(CENTER, CENTER);
+				text("Legend", xText, yText);
+			}
+			break;
+
+		case 3:
+
+			if (overButton((int) xRect, (int) yRect, (int) widthRect, (int) heightRect)) {
+				fill(250, 250, 250, 200);
+				rect(xRect, yRect, widthRect, heightRect, 7);
+
+				fill(0);
+				textSize(fs16);
+				textAlign(CENTER, CENTER);
+				text("Legend", xText, yText);
+
+				float xRectLegend = xRect;
+				float yRectLegend = yRect * 2 + heightRect;
+				float widthRectLegend = widthRect * 2;
+				float heightRectLegend = heightRect * 5;
+
+				fill(250, 250, 250, 200);
+				rect(xRectLegend, yRectLegend, widthRectLegend, heightRectLegend, 7);
+
+				fill(0);
+				textAlign(LEFT);
+				text("Color:", xRectLegend + 10, yRectLegend + 30);
+				fill(60, 179, 113);
+				textSize(fs13);
+				text("- Wins", xRectLegend + 10, yRectLegend + 62);
+				fill(255);
+				text("- Draws", xRectLegend + 10, yRectLegend + 94);
+				fill(255, 99, 71);
+				text("- Losses", xRectLegend + 10, yRectLegend + 126);
+			} else {
+				fill(200, 200, 200, 100);
+				rect(xRect, yRect, widthRect, heightRect, 7);
+
+				fill(255);
+				textSize(fs16);
+				textAlign(CENTER, CENTER);
+				text("Legend", xText, yText);
+			}
+			break;
+
+		case 4:
+			if (overButton((int) xRect, (int) yRect, (int) widthRect, (int) heightRect)) {
+				fill(250, 250, 250, 200);
+				rect(xRect, yRect, widthRect, heightRect, 7);
+
+				fill(0);
+				textSize(fs16);
+				textAlign(CENTER, CENTER);
+				text("Legend", xText, yText);
+
+				float xRectLegend = xRect;
+				float yRectLegend = yRect * 2 + heightRect;
+				float widthRectLegend = widthRect * 3;
+				float heightRectLegend = heightRect * 5;
+
+				fill(250, 250, 250, 200);
+				rect(xRectLegend, yRectLegend, widthRectLegend, heightRectLegend, 7);
+
+				fill(0);
+				textAlign(LEFT);
+				text("Color:", xRectLegend + 10, yRectLegend + 30);
+				fill(60, 179, 113);
+				textSize(fs13);
+				text("- Same league club", xRectLegend + 10, yRectLegend + 62);
+			} else {
+				fill(200, 200, 200, 100);
+				rect(xRect, yRect, widthRect, heightRect, 7);
+				fill(255);
+				textSize(fs16);
+				textAlign(CENTER, CENTER);
+				text("Legend", xText, yText);
+			}
+			break;
+
+		default:
+			break;
+		}
+
 	}
 
 	public static void main(String args[]) {
