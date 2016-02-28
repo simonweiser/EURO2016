@@ -135,7 +135,8 @@ public class Sketch extends PApplet {
 				public int compare(Country c1, Country c2) {
 					int rowIndex1 = c1.getH2hData5years().findRowIndex(selectedCountry.getName(), "opponent");
 					int rowIndex2 = c2.getH2hData5years().findRowIndex(selectedCountry.getName(), "opponent");
-					return c1.getH2hData5years().getInt(rowIndex1, "played") - c2.getH2hData5years().getInt(rowIndex2, "played");
+					return c1.getH2hData5years().getInt(rowIndex1, "played")
+							- c2.getH2hData5years().getInt(rowIndex2, "played");
 				}
 
 			});
@@ -157,61 +158,103 @@ public class Sketch extends PApplet {
 
 	public void mouseClicked() {
 
-		float xRectGroupButton = width - (logo.width + 15f);
-		float yRectGroupButton = 15;
-		float xButtonGroupButton = (logo.width / 2 + xRectGroupButton) - onButton.width / 2;
-		float yButtonGroupButton = logo.height * 0.4f + yRectGroupButton;
+		if (mouseButton == LEFT) {
 
-		float widthRect = logo.width;
-		float heightRect = height / 30f;
+			float widthRect = logo.width;
+			float heightRect = height / 30f;
 
-		float xRect = 15f;
-		float yRect = height - heightRect - 15f;
+			float xRect = 15f;
+			float yRect = height - heightRect - 15f;
 
-		float yRectSeasonFilterButton = height - heightRect - logo.height;
+			float xRectGroupButton = width - (logo.width + 15f);
+			float yRectGroupButton = 15;
+			float xButtonGroupButton = (logo.width / 2 + xRectGroupButton) - onButton.width / 2;
+			float yButtonGroupButton = logo.height * 0.4f + yRectGroupButton;
 
-		float xSeasonFilterButton = xRect + (logo.width / 2 - onButton.width / 2);
-		float ySeasonFilterButton = yRectSeasonFilterButton * 1.1f;
+			float yRectGroupButton2 = height - heightRect - logo.height * 1.8f;
 
-		// seasonFilterButton
-		if (overButton((int) xSeasonFilterButton, (int) ySeasonFilterButton, (int) widthRect, (int) heightRect)) {
-			seasonFilter = !seasonFilter;
-			countrySorted = sortCountriesByPlayed();
-			if (selectedCountryDetail != null) {
-				selectedCountryDetail.setGoalsForCounter(0);
-				selectedCountryDetail.setGoalsAggainstCounter(0);
-			}
-		}
+			float xButtonGroup2 = xRect + (logo.width / 2 - onButton.width / 2);
+			float yButtonGroup2 = yRectGroupButton2 * 1.1f;
 
-		// back button
-		if (overButton((int) xRect, (int) yRect, (int) widthRect, (int) heightRect)) {
+			float yRectSeasonFilterButton = height - heightRect - logo.height;
+
+			float xSeasonFilterButton = xRect + (logo.width / 2 - onButton.width / 2);
+			float ySeasonFilterButton = yRectSeasonFilterButton * 1.1f;
+
 			switch (drawSceneNum) {
 			case 1:
+				// group filter rechts oben
+				if (overButton((int) xButtonGroupButton, (int) yButtonGroupButton, onButton.width, onButton.height)) {
+					groupFilterActive = !groupFilterActive;
+				}
+
 				break;
 
 			case 2:
-				reset();
+				// back button
+				if (overButton((int) xRect, (int) yRect, (int) widthRect, (int) heightRect)) {
+					reset();
+				}
+
+				// seasonFilterButton
+				else if (overButton((int) xSeasonFilterButton, (int) ySeasonFilterButton, (int) widthRect,
+						(int) heightRect)) {
+					seasonFilter = !seasonFilter;
+					countrySorted = sortCountriesByPlayed();
+					if (selectedCountryDetail != null) {
+						selectedCountryDetail.setGoalsForCounter(0);
+						selectedCountryDetail.setGoalsAggainstCounter(0);
+					}
+				}
+
+				// group filter bottom left
+				else if (overButton((int) xButtonGroup2, (int) yButtonGroup2, (int) onButton.width,
+						(int) onButton.height)) {
+					groupFilterActive = !groupFilterActive;
+				}
+
 				break;
 
 			case 3:
-				drawSceneNum = 2;
+				// back button
+				if (overButton((int) xRect, (int) yRect, (int) widthRect, (int) heightRect)) {
+					drawSceneNum = 2;
+					return;
+				}
+
+				// seasonFilterButton
+				else if (overButton((int) xSeasonFilterButton, (int) ySeasonFilterButton, (int) widthRect,
+						(int) heightRect)) {
+					seasonFilter = !seasonFilter;
+					countrySorted = sortCountriesByPlayed();
+					if (selectedCountryDetail != null) {
+						selectedCountryDetail.setGoalsForCounter(0);
+						selectedCountryDetail.setGoalsAggainstCounter(0);
+					}
+				}
+
+				// group filter bottom left
+				else if (overButton((int) xButtonGroup2, (int) yButtonGroup2, (int) onButton.width,
+						(int) onButton.height)) {
+					groupFilterActive = !groupFilterActive;
+				}
+
 				break;
 
 			case 4:
-				drawSceneNum = 2;
+				// back button
+				if (overButton((int) xRect, (int) yRect, (int) widthRect, (int) heightRect)) {
+					drawSceneNum = 2;
+					return;
+				}
 				break;
 
 			default:
-				println("ERROR: MOUSECLICKED");
 				break;
 			}
 		}
 
-		else if (overButton((int) xButtonGroupButton, (int) yButtonGroupButton, onButton.width, onButton.height)) {
-			groupFilterActive = !groupFilterActive;
-		}
-
-		else if (mouseButton == LEFT && selectedCountry != null) {
+		if (mouseButton == LEFT && selectedCountry != null) {
 			switch (drawSceneNum) {
 			case 1:
 				countrySorted = sortCountriesByPlayed();
@@ -278,7 +321,6 @@ public class Sketch extends PApplet {
 		} else {
 			background(0);
 			image(splashMovie, 0, height / 2 - splashMovie.height / 2);
-			// image(splashMovie, width / 2 - 400, height / 2 - 300, 800, 600);
 		}
 	}
 
@@ -364,6 +406,7 @@ public class Sketch extends PApplet {
 
 		drawBackButton();
 		drawSeasonFilterButton();
+		drawGroupFilterButton();
 
 		boolean isMouseOverCountry = false;
 
@@ -425,7 +468,9 @@ public class Sketch extends PApplet {
 			selectedCountryDetail = null;
 		}
 
-		if (overCountry(selectedCountry.getFlag_position().x + selectedCountry.getFLAG_SIZE() / 2, selectedCountry.getFlag_position().y + selectedCountry.getFLAG_SIZE() / 2, selectedCountry.getFLAG_SIZE())) {
+		if (overCountry(selectedCountry.getFlag_position().x + selectedCountry.getFLAG_SIZE() / 2,
+				selectedCountry.getFlag_position().y + selectedCountry.getFLAG_SIZE() / 2,
+				selectedCountry.getFLAG_SIZE())) {
 			selectedCountry.setMouseOverCenter(true);
 		} else {
 			selectedCountry.setMouseOverCenter(false);
@@ -513,7 +558,8 @@ public class Sketch extends PApplet {
 		Table h2hData5years = loadTable("res/data/h2h_5years/h2h_" + name.toLowerCase() + "_5years.csv", "header");
 		Table countryInfo = loadTable("res/data/team_info/team_info_" + name.toLowerCase() + ".csv", "header");
 		Table players = loadTable("res/data/players/playersCSV/players_" + name.toLowerCase() + ".csv", "header");
-		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, team_logo, false, h2hData, countryInfo, players, group, h2hData5years);
+		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, team_logo, false, h2hData,
+				countryInfo, players, group, h2hData5years);
 		countries.add(country);
 	}
 
@@ -543,6 +589,35 @@ public class Sketch extends PApplet {
 		} else {
 			image(offButton, xButton, yButton);
 		}
+	}
+
+	private void drawGroupFilterButton() {
+
+		float widthRect = logo.width;
+		float heightRect = height / 30f;
+
+		float xRect = 15f;
+		float yRect = height - heightRect - logo.height * 1.8f;
+		float xText = widthRect / 2 + xRect;
+		float yText = yRect + heightRect * 1.1f;
+
+		float xButton = xRect + (logo.width / 2 - onButton.width / 2);
+		float yButton = yRect * 1.1f;
+
+		noStroke();
+		fill(200, 200, 200, 100);
+		rect(xRect, yRect, logo.width, logo.height * 0.75f, 7);
+		textSize(fs16);
+		textAlign(CENTER);
+		fill(255);
+		text("group\nfilter", xText, yText);
+
+		if (groupFilterActive == true) {
+			image(onButton, xButton, yButton);
+		} else {
+			image(offButton, xButton, yButton);
+		}
+
 	}
 
 	private void drawBackButton() {
