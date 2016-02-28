@@ -57,16 +57,16 @@ public class Sketch extends PApplet {
 		background.resize(width, height);
 		background.filter(BLUR, 6);
 
-		drawSceneNum = 1;
+		drawSceneNum = 0;
 		selectedCountry = null;
 		selectedCountryDetail = null;
 		currentFrameCount = 0;
 
 		createCountries();
 
-		// splashMovie = new Movie(this, "res/data/splashVideo.mp4");
-		// splashMovie.play();
-		// movieDuration = splashMovie.duration() + 0.5f;
+		splashMovie = new Movie(this, "res/data/splashVideo.mp4");
+		splashMovie.play();
+		movieDuration = splashMovie.duration() + 0.5f;
 		startTime = System.currentTimeMillis() / 1000.0;
 
 		seasonFilter = false;
@@ -137,8 +137,7 @@ public class Sketch extends PApplet {
 				public int compare(Country c1, Country c2) {
 					int rowIndex1 = c1.getH2hData5years().findRowIndex(selectedCountry.getName(), "opponent");
 					int rowIndex2 = c2.getH2hData5years().findRowIndex(selectedCountry.getName(), "opponent");
-					return c1.getH2hData5years().getInt(rowIndex1, "played")
-							- c2.getH2hData5years().getInt(rowIndex2, "played");
+					return c1.getH2hData5years().getInt(rowIndex1, "played") - c2.getH2hData5years().getInt(rowIndex2, "played");
 				}
 
 			});
@@ -199,8 +198,7 @@ public class Sketch extends PApplet {
 				}
 
 				// seasonFilterButton
-				else if (overButton((int) xSeasonFilterButton, (int) ySeasonFilterButton, (int) widthRect,
-						(int) heightRect)) {
+				else if (overButton((int) xSeasonFilterButton, (int) ySeasonFilterButton, (int) widthRect, (int) heightRect)) {
 					seasonFilter = !seasonFilter;
 					countrySorted = sortCountriesByPlayed();
 					if (selectedCountryDetail != null) {
@@ -210,8 +208,7 @@ public class Sketch extends PApplet {
 				}
 
 				// group filter bottom left
-				else if (overButton((int) xButtonGroup2, (int) yButtonGroup2, (int) onButton.width,
-						(int) onButton.height)) {
+				else if (overButton((int) xButtonGroup2, (int) yButtonGroup2, (int) onButton.width, (int) onButton.height)) {
 					groupFilterActive = !groupFilterActive;
 				}
 
@@ -225,8 +222,7 @@ public class Sketch extends PApplet {
 				}
 
 				// seasonFilterButton
-				else if (overButton((int) xSeasonFilterButton, (int) ySeasonFilterButton, (int) widthRect,
-						(int) heightRect)) {
+				else if (overButton((int) xSeasonFilterButton, (int) ySeasonFilterButton, (int) widthRect, (int) heightRect)) {
 					seasonFilter = !seasonFilter;
 					countrySorted = sortCountriesByPlayed();
 					if (selectedCountryDetail != null) {
@@ -236,8 +232,7 @@ public class Sketch extends PApplet {
 				}
 
 				// group filter bottom left
-				else if (overButton((int) xButtonGroup2, (int) yButtonGroup2, (int) onButton.width,
-						(int) onButton.height)) {
+				else if (overButton((int) xButtonGroup2, (int) yButtonGroup2, (int) onButton.width, (int) onButton.height)) {
 					groupFilterActive = !groupFilterActive;
 				}
 
@@ -471,9 +466,7 @@ public class Sketch extends PApplet {
 			selectedCountryDetail = null;
 		}
 
-		if (overCountry(selectedCountry.getFlag_position().x + selectedCountry.getFLAG_SIZE() / 2,
-				selectedCountry.getFlag_position().y + selectedCountry.getFLAG_SIZE() / 2,
-				selectedCountry.getFLAG_SIZE())) {
+		if (overCountry(selectedCountry.getFlag_position().x + selectedCountry.getFLAG_SIZE() / 2, selectedCountry.getFlag_position().y + selectedCountry.getFLAG_SIZE() / 2, selectedCountry.getFLAG_SIZE())) {
 			selectedCountry.setMouseOverCenter(true);
 		} else {
 			selectedCountry.setMouseOverCenter(false);
@@ -564,8 +557,7 @@ public class Sketch extends PApplet {
 		Table h2hData5years = loadTable("res/data/h2h_5years/h2h_" + name.toLowerCase() + "_5years.csv", "header");
 		Table countryInfo = loadTable("res/data/team_info/team_info_" + name.toLowerCase() + ".csv", "header");
 		Table players = loadTable("res/data/players/playersCSV/players_" + name.toLowerCase() + ".csv", "header");
-		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, team_logo, false, h2hData,
-				countryInfo, players, group, h2hData5years);
+		Country country = new Country(this, FLAG_SIZE, name, screenLoc, flag_img, hover_img, team_logo, false, h2hData, countryInfo, players, group, h2hData5years);
 		countries.add(country);
 	}
 
